@@ -1,328 +1,207 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <title>Tinder 2026</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Tinder 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- 🔤 Гарний шрифт -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
-      color: #fff;
-      min-height: 100vh;
-    }
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
+  color: #fff;
+  min-height: 100vh;
+}
 
-    header {
-      display: flex;
-      justify-content: flex-end;
-      padding: 20px 32px;
-      background: rgba(20, 20, 20, 0.8);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 10px 40px rgba(255, 45, 110, 0.15);
-    }
+/* HEADER */
+header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 20px 32px;
+  background: rgba(20,20,20,.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 40px rgba(255,45,110,.15);
+}
 
-    .register-btn {
-      padding: 12px 26px;
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
-      transition: all 0.25s ease;
-    }
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+}
 
-    .register-btn:hover {
-      transform: translateY(-1px) scale(1.04);
-      box-shadow: 0 12px 30px rgba(255, 45, 110, 0.45);
-    }
+.login-btn {
+  padding: 12px 24px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff80ab, #ff4081);
+}
 
-    .register-menu {
-      position: absolute;
-      top: 90px;
-      right: 32px;
-      width: 420px;
-      background: rgba(25, 25, 25, 0.95);
-      border-radius: 22px;
-      padding: 28px 30px 30px;
-      box-shadow: 0 30px 80px rgba(255, 45, 110, 0.35);
-      display: none;
-      animation: fadeUp 0.35s ease;
-    }
+.register-btn {
+  padding: 12px 26px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
+}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(15px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+/* POPUPS */
+.popup {
+  position: absolute;
+  top: 90px;
+  right: 32px;
+  width: 420px;
+  background: rgba(25,25,25,.95);
+  border-radius: 22px;
+  padding: 28px;
+  display: none;
+  box-shadow: 0 30px 80px rgba(255,45,110,.35);
+  animation: fadeUp .35s ease;
+}
 
-    .register-menu h2 {
-      margin: 0 0 20px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(15px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 22px;
+  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: #cfcfcf;
-    }
+input, textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #2c2c2c;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+}
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid #2c2c2c;
-      background: #111;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
-    }
+textarea {
+  resize:none;
+  min-height:90px;
+}
 
-    textarea {
-      resize: none;
-      min-height: 90px;
-    }
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
+  font-size: 15px;
+  margin-top: 10px;
+}
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #ff4f8b;
-      box-shadow: 0 0 0 3px rgba(255, 79, 139, 0.2);
-    }
+/* SUCCESS MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
 
-    input[type="file"] {
-      padding: 10px;
-      font-size: 13px;
-      background: #151515;
-      color: #aaa;
-    }
+.modal {
+  background: linear-gradient(180deg,#1a1a1a,#111);
+  padding: 34px;
+  border-radius: 26px;
+  text-align: center;
+  width: 360px;
+  box-shadow: 0 40px 100px rgba(255,45,110,.5);
+  animation: scaleIn .35s ease;
+}
 
-    .submit-btn {
-      margin-top: 18px;
-      width: 100%;
-      padding: 14px;
-      border-radius: 16px;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      color: #fff;
-      background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
-      transition: all 0.25s ease;
-    }
+@keyframes scaleIn {
+  from { transform:scale(.85); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
 
-    .submit-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 15px 40px rgba(255, 45, 110, 0.45);
-    }
-
-    @media (max-width: 500px) {
-      .register-menu {
-        right: 10px;
-        left: 10px;
-        width: auto;
-      }
-    }
-  
-    /* Success modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal {
-      background: linear-gradient(180deg, #1a1a1a, #111);
-      padding: 36px 34px;
-      border-radius: 26px;
-      text-align: center;
-      width: 360px;
-      box-shadow: 0 40px 100px rgba(255, 45, 110, 0.5);
-      animation: scaleIn 0.35s ease;
-    }
-
-    .checkmark {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      font-weight: 700;
-      box-shadow: 0 0 30px rgba(255, 45, 110, 0.6);
-    }
-
-    .modal h3 {
-      margin: 10px 0 6px;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .modal p {
-      font-size: 14px;
-      color: #ccc;
-      line-height: 1.5;
-    }
-
-    .modal-btn {
-      margin-top: 22px;
-      padding: 12px 26px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ff2f6d, #ff7eb3);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.25s;
-    }
-
-    .modal-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(255, 45, 110, 0.45);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes scaleIn {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-  </style>
+.checkmark {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 30px rgba(255,45,110,.6);
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <button class="register-btn" onclick="toggleRegisterMenu()">Зареєструватися</button>
+  <button class="login-btn" onclick="openLogin()">Увійти</button>
+  <button class="register-btn" onclick="openRegister()">Зареєструватися</button>
 </header>
 
-<div class="register-menu" id="registerMenu">
-  <h2>Реєстрація</h2>
-
-  <form method="POST" enctype="multipart/form-data">
+<!-- LOGIN -->
+<div class="popup" id="loginPopup">
+  <h2>Вхід</h2>
+  <form method="POST" action="/login/">
     {% csrf_token %}
-
-    <div class="form-group">
-      <label>Імʼя</label>
-      <input type="text" name="name" required>
-    </div>
-
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" name="username" required>
-    </div>
-
-    <div class="form-group">
-      <label>Пароль</label>
-      <input type="password" name="password" required>
-    </div>
-
-    <div class="form-group">
-      <label>Дата народження</label>
-      <input type="date" name="birth_date">
-    </div>
-
-    <div class="form-group">
-      <label>Стать</label>
-      <select name="gender">
-        <option value="">Обрати</option>
-        <option value="male">Чоловіча</option>
-        <option value="female">Жіноча</option>
-        <option value="other">Інше</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Місто</label>
-      <input type="text" name="city">
-    </div>
-
-    <div class="form-group">
-      <label>Про себе</label>
-      <textarea name="bio"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Фото</label>
-      <input type="file" name="photo">
-    </div>
-
-    <button type="submit" class="submit-btn" onclick="showSuccess(event)">Зареєструватись</button>
+    <input type="text" name="username" placeholder="Логін" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <button class="submit-btn">Увійти</button>
   </form>
 </div>
 
-<!-- Success Modal -->
-<div class="modal-overlay" id="successModal">
-  <div class="modal">
-    <div class="checkmark">✓</div>
-    <h3>Реєстрація успішна</h3>
-    <p>Твій профіль створено 💖<br>Можеш починати знайомства</p>
-    <button class="modal-btn" onclick="closeModal()">Круто!</button>
-  </div>
+<!-- REGISTER -->
+<div class="popup" id="registerPopup">
+  <h2>Реєстрація</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="register">
+
+    <input type="text" name="name" placeholder="Імʼя" required>
+    <input type="text" name="username" placeholder="Логін" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <input type="date" name="birth_date">
+    <input type="text" name="city" placeholder="Місто">
+    <textarea name="bio" placeholder="Про себе"></textarea>
+    <input type="file" name="photo">
+    <button class="submit-btn">Зареєструватися</button>
+  </form>
 </div>
 
+<!-- SUCCESS -->
+{% if messages %}
+<div class="modal-overlay" onclick="this.style.display='none'">
+  <div class="modal">
+    <div class="checkmark">✓</div>
+    {% for message in messages %}
+      <h3>{{ message }}</h3>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <script>
-  function toggleRegisterMenu() {
-    const menu = document.getElementById('registerMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-  }
-  function showSuccess(e) {
-    e.preventDefault();
-
-    const inputs = document.querySelectorAll('#registerMenu input[required]');
-    let valid = true;
-
-    inputs.forEach(input => {
-      if (!input.value.trim()) valid = false;
-    });
-
-    if (valid) {
-      const modal = document.getElementById('successModal');
-      modal.style.display = 'flex';
-    }
-  };
-
-    if (valid) {
-      document.getElementById('successModal').style.display = 'flex';
-    }
-
-  function closeModal() {
-    document.getElementById('successModal').style.display = 'none';
-    document.getElementById('registerMenu').style.display = 'none';
-  }
+function openLogin(){
+  document.getElementById('loginPopup').style.display='block';
+  document.getElementById('registerPopup').style.display='none';
+}
+function openRegister(){
+  document.getElementById('registerPopup').style.display='block';
+  document.getElementById('loginPopup').style.display='none';
+}
 </script>
 
 </body>
