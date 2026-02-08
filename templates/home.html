@@ -12,68 +12,120 @@
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
-  color: #fff;
+  background: #eaf3ff;
+  display: flex;
+  min-height: 100vh;
 }
 
-/* HEADER */
-header {
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #f2f4f7;
+  padding: 30px 20px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  padding: 24px 40px;
 }
 
 .logo {
-  font-size: 22px;
-  font-weight: 800;
-  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-header button {
-  padding: 12px 26px;
-  border-radius: 14px;
-  border: none;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
-}
-
-/* HERO */
-.hero {
   text-align: center;
-  padding: 120px 20px 80px;
+  margin-bottom: 40px;
 }
 
-.hero h1 { font-size: 52px; font-weight: 800; }
-.hero p { font-size: 18px; color: #ccc; max-width: 600px; margin: 0 auto 34px; }
+.logo h2 {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.profile img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* HERO CARD */
+.main-card {
+  background: #fff;
+  width: 460px;
+  padding: 48px 40px;
+  border-radius: 28px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.15);
+  text-align: center;
+}
+
+.main-card h1 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.main-card p {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 28px;
+}
 
 .start-btn {
-  padding: 16px 36px;
-  font-size: 16px;
-  border-radius: 18px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
   border: none;
-  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
-  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
+  background: #0b2c86;
+  color: #fff;
 }
 
 /* COUPLES */
 .couples {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-  gap: 26px;
-  padding: 60px 60px;
+  margin-top: 40px;
+  display: flex;
+  gap: 20px;
 }
 
 .couple-card {
-  border-radius: 24px;
+  width: 200px;
+  height: 240px;
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 20px 60px rgba(255,45,110,.35);
+  box-shadow: 0 20px 40px rgba(0,0,0,.15);
 }
 
 .couple-card img {
@@ -84,321 +136,75 @@ header button {
 
 .couple-card span {
   position: absolute;
-  bottom: 14px;
-  left: 14px;
-  font-weight: 600;
+  bottom: 10px;
+  left: 10px;
   background: rgba(0,0,0,.6);
-  padding: 6px 12px;
-  border-radius: 10px;
-}
-
-/* INFO */
-.info {
-  padding: 80px 40px;
-  text-align: center;
-}
-
-.info h2 {
-  font-size: 36px;
-  margin-bottom: 50px;
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-  gap: 30px;
-}
-
-.step {
-  background: #141414;
-  padding: 34px 26px;
-  border-radius: 24px;
-}
-
-.step h3 {
-  margin-bottom: 10px;
-  color: #ff7eb3;
-}
-
-/* POPUPS */
-.popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.65);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.popup-box {
-  background: #141414;
-  padding: 36px;
-  width: 440px;
-  border-radius: 26px;
-}
-
-.popup-box h2 {
-  text-align: center;
-  margin-bottom: 18px;
-  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-input, textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid #2c2c2c;
-  background: #111;
   color: #fff;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 13px;
 }
 
-textarea { resize: none; min-height: 80px; }
-
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  background: linear-gradient(135deg,#ff2f6d,#ff7eb3);
-  border: none;
-  color: #fff;
-  font-weight: 600;
+.logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
-
-.switch {
-  text-align: center;
-  margin-top: 12px;
-  color: #ff7eb3;
-  cursor: pointer;
-}
-
-/* MESSAGE MODAL */
-.message-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.message-box {
-  background: #141414;
-  padding: 30px;
-  border-radius: 24px;
-  text-align: center;
-  width: 360px;
-}
-
-.icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 14px;
-  border-radius: 50%;
-  font-size: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* FOOTER */
-footer {
-  background:#0e0e0e;
-  padding:50px 20px;
-  margin-top:80px;
-}
-
-.footer-inner {
-  max-width:1100px;
-  margin:0 auto;
-  text-align:center;
-}
-
-.footer-logo {
-  font-weight:800;
-  font-size:22px;
-  margin-bottom:10px;
-  background:linear-gradient(135deg,#ff2f6d,#ff7eb3);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-footer p {
-  color:#888;
-  font-size:14px;
-  margin-bottom:20px;
-}
-
-.footer-links {
-  display:flex;
-  justify-content:center;
-  gap:26px;
-}
-
-.footer-links a {
-  color:#ff7eb3;
-  text-decoration:none;
-  font-size:14px;
-}
-
-.footer-links a:hover {
-  text-decoration:underline;
-}
-
-/* PASSWORD HIDER */
-.password-field {
-  position:relative;
-}
-
-.password-field input {
-  padding-right:44px;
-}
-
-.toggle {
-  position:absolute;
-  right:14px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:18px;
-  opacity:.7;
-}
-
-.toggle:hover {
-  opacity:1;
-}
-
-.success { background: linear-gradient(135deg,#ff2f6d,#ff7eb3); }
-.error { background: #ff3b3b; }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">Tinder 2026</div>
-  <button onclick="openRegister()">Розпочати</button>
-</header>
-
-<section class="hero">
-  <h1>Знайди свою людину ❤️</h1>
-  <p>Знайомства нового покоління. Реальні люди, справжні емоції.</p>
-  <button class="start-btn" onclick="openRegister()">Розпочати</button>
-</section>
-
-<section class="couples">
-  <div class="couple-card"><img src="https://images.unsplash.com/photo-1627964464837-6328f5931576?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y291cGxlc3xlbnwwfHwwfHx8MA%3D%3D"><span>Анна & Макс</span></div>
-  <div class="couple-card"><img src="https://images.unsplash.com/photo-1591969851586-adbbd4accf81?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNvdXBsZXN8ZW58MHx8MHx8fDA%3D"><span>Оля & Ігор</span></div>
-  <div class="couple-card"><img src="https://images.unsplash.com/photo-1624228652376-d4faa602b278?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGNvdXBsZXN8ZW58MHx8MHx8fDA%3D"><span>Марія & Андрій</span></div>
-</section>
-
-<section class="info">
-  <h2>Як це працює?</h2>
-  <div class="steps">
-    <div class="step"><h3>1. Реєстрація</h3><p>Створи свій профіль всього за 1 хвилину. Додай фотографію, розкажи про себе та свої інтереси — це перший крок до нових знайомств і цікавих спілкувань.</p></div>
-    <div class="step"><h3>2. Перегляд</h3><p>Дивись анкети людей поруч та знаходь тих, хто тобі підходить. Використовуй фільтри за віком, інтересами або локацією, щоб легко знаходити потенційних друзів або партнерів.</p></div>
-    <div class="step"><h3>3. Match</h3><p>Знайомся та спілкуйся! Коли двоє користувачів взаємно цікавляться один одним, створюється Match — почни чат, дізнайся більше і плануй зустріч, якщо захочеш.</p></div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div>
+  <div class="logo">
+    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
   </div>
-</section>
 
-<!-- REGISTER -->
-<div class="popup" id="registerPopup">
-  <div class="popup-box">
-    <h2>Реєстрація</h2>
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input type="hidden" name="form_type" value="register">
-
-      <input name="name" placeholder="Імʼя" required>
-      <input name="username" placeholder="Логін" required>
-
-      <div class="password-field">
-       <input type="password" name="password" id="password" placeholder="Пароль" required>
-       <span class="toggle" onclick="togglePassword('password', this)">👁</span>
-      </div>
-      <div class="password-field">
-        <input type="password" id="password2" placeholder="Повтор паролю" required>
-        <span class="toggle" onclick="togglePassword('password2', this)">👁</span>
-      </div>
-
-
-      <input type="date" name="birth_date">
-      <input name="city" placeholder="Місто">
-      <textarea name="bio" placeholder="Про себе"></textarea>
-      <input type="file" name="photo">
-
-      <button class="submit-btn">Зареєструватися</button>
-    </form>
-    <div class="switch" onclick="openLogin()">У мене вже є акаунт</div>
+  <div class="nav">
+    <a href="/register/">🏠 Знайомства</a>
+    <a href="/register/">🔗 Симпатії</a>
+    <a href="/register/">🤍 Лайки</a>
+    <a href="/register/">✉️ Повідомлення</a>
   </div>
 </div>
 
-<!-- LOGIN -->
-<div class="popup" id="loginPopup">
-  <div class="popup-box">
-    <h2>Вхід</h2>
-    <form method="POST" action="/login/">
-      {% csrf_token %}
-      <input name="username" placeholder="Логін" required>
-      <input type="password" name="password" placeholder="Пароль" required>
-      <button class="submit-btn">Увійти</button>
-    </form>
-    <div class="switch" onclick="openRegister()">Створити акаунт</div>
-  </div>
+  <a href="/register/" class="profile">
+    <img src="https://i.pravatar.cc/100" alt="">
+    <span>Профіль</span>
+  </a>
 </div>
 
-<!-- MESSAGES -->
-{% if messages %}
-<div class="message-overlay" onclick="this.remove()">
-  {% for message in messages %}
-  <div class="message-box">
-    <div class="icon {% if message.tags == 'success' %}success{% else %}error{% endif %}">
-      {% if message.tags == 'success' %}✓{% else %}✖{% endif %}
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <div class="main-card">
+    <h1>Знайди свою людину ❤️</h1>
+    <p>Знайомства нового покоління. Реальні люди, справжні емоції.</p>
+    <button class="start-btn" onclick="location.href='/register/'">
+      Розпочати
+    </button>
+  </div>
+
+  <div class="couples">
+    <div class="couple-card">
+      <img src="https://images.unsplash.com/photo-1627964464837-6328f5931576?w=500&auto=format&fit=crop&q=60">
+      <span>Анна & Макс</span>
     </div>
-    <h3>{{ message }}</h3>
+
+    <div class="couple-card">
+      <img src="https://images.unsplash.com/photo-1591969851586-adbbd4accf81?w=500&auto=format&fit=crop&q=60">
+      <span>Оля & Ігор</span>
+    </div>
+
+    <div class="couple-card">
+      <img src="https://images.unsplash.com/photo-1624228652376-d4faa602b278?w=500&auto=format&fit=crop&q=60">
+      <span>Марія & Андрій</span>
+    </div>
   </div>
-  {% endfor %}
+
 </div>
-{% endif %}
-
-
-<script>
-function togglePassword(id, el){
-  const input = document.getElementById(id);
-  if(input.type === "password"){
-    input.type = "text";
-    el.textContent = "🙈";
-  } else {
-    input.type = "password";
-    el.textContent = "👁";
-  }
-}
-</script>
-
-<script>
-function openRegister(){
-  document.getElementById('registerPopup').style.display='flex';
-  document.getElementById('loginPopup').style.display='none';
-}
-function openLogin(){
-  document.getElementById('loginPopup').style.display='flex';
-  document.getElementById('registerPopup').style.display='none';
-}
-</script>
 
 </body>
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo">Tinder 2026</div>
-    <p>© 2026 Всі права захищені. Знайомства нового покоління.</p>
-    <div class="footer-links">
-      <a href="#">Про нас</a>
-      <a href="#">Політика конфіденційності</a>
-      <a href="#">Контакти</a>
-    </div>
-  </div>
-</footer>
 </html>

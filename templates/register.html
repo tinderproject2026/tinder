@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Реєстрація</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #a9bbcf;
+}
+
+.wrapper {
+  width: 420px;
+}
+
+.card {
+  background: #f4f4f4;
+  padding: 38px 34px 30px;
+  border-radius: 26px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #444;
+  margin: 8px 0 26px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #e7e7e7;
+  font-size: 14px;
+}
+
+textarea { resize: none; min-height: 80px; }
+
+/* PHOTO BOX */
+.photo-box {
+  width: 100%;
+  height: 220px;
+  border: 2px dashed #ccc;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #444;
+  cursor: pointer;
+  margin-bottom: 20px;
+  background: #fff;
+}
+
+/* CHIP BUTTONS */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chip {
+  padding: 8px 14px;
+  background: #ddd;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #1c2e80;
+  color: #fff;
+}
+
+/* BUTTONS */
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  font-size: 15px;
+  background: #1c2e80;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1.5px solid #1c2e80;
+  font-weight: 600;
+  font-size: 14px;
+  background: transparent;
+  color: #1c2e80;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.step {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #333;
+  text-align: center;
+}
+
+.date-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.date-row select {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #e7e7e7;
+  font-size: 14px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+<div class="card">
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+<input type="hidden" name="step" value="{{ step }}">
+
+{% if step == 1 %}
+<h1>ДАВАЙ<br>ПОЗНАЙОМИМОСЬ</h1>
+<div class="subtitle">Створимо профіль за кілька хвилин</div>
+
+<label>Імʼя</label>
+<input name="name" placeholder="Ваше імʼя" required>
+
+<label>Логін</label>
+<input name="username" placeholder="Ваш логін" required>
+
+<label>Пароль</label>
+<input type="password" name="password" placeholder="Пароль" required>
+<label>Дата народження</label>
+<div class="date-row">
+
+  <select name="birth_day" required>
+    <option value="">День</option>
+    {% for i in days %}
+      <option value="{{ i }}">{{ i|stringformat:"02d" }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="birth_month" required>
+    <option value="">Місяць</option>
+    <option value="1">Січень</option>
+    <option value="2">Лютий</option>
+    <option value="3">Березень</option>
+    <option value="4">Квітень</option>
+    <option value="5">Травень</option>
+    <option value="6">Червень</option>
+    <option value="7">Липень</option>
+    <option value="8">Серпень</option>
+    <option value="9">Вересень</option>
+    <option value="10">Жовтень</option>
+    <option value="11">Листопад</option>
+    <option value="12">Грудень</option>
+  </select>
+
+  <select name="birth_year" required>
+    <option value="">Рік</option>
+    {% for y in years %}
+      <option value="{{ y }}">{{ y }}</option>
+    {% endfor %}
+  </select>
+
+</div>
+
+<label>Стать</label>
+<select name="gender">
+  <option value="">Вкажіть вашу стать</option>
+  <option>Чоловік</option>
+  <option>Жінка</option>
+</select>
+
+<label>Місто</label>
+<input name="city" placeholder="Ваше місто">
+
+<button class="primary-btn">Далі</button>
+
+{% elif step == 2 %}
+<h1>ТВОЇ ФОТО</h1>
+<div class="subtitle">Профілі з фото отримують більше матчів</div>
+
+<label class="photo-box" id="photoBox">
+  <span id="plus">+</span>
+  <img id="preview" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:16px;">
+  <input type="file" name="photo" id="photoInput" style="display:none;">
+</label>
+
+<button class="primary-btn">Далі</button>
+<button name="skip" value="1" class="secondary-btn">Пропустити</button>
+
+{% elif step == 3 %}
+<h1>ПРО ТЕБЕ</h1>
+<div class="subtitle">Розкажи трохи про себе</div>
+
+<label>Короткий опис</label>
+<textarea name="bio" placeholder="Чим ти живеш поза роботою?"></textarea>
+
+<label>Інтереси</label>
+<div class="chips" data-name="interests">
+  <div class="chip">Мистецтво</div>
+  <div class="chip">Кіно</div>
+  <div class="chip">Їжа</div>
+  <div class="chip">Музика</div>
+  <div class="chip">Книги</div>
+  <div class="chip">Спорт</div>
+  <div class="chip">Ігри</div>
+  <div class="chip">Подорожі</div>
+  <div class="chip">Фотографія</div>
+  <div class="chip">Велоспорт</div>
+  <div class="chip">Театр</div>
+  <div class="chip">Вечірки</div>
+</div>
+<input type="hidden" name="interests">
+
+<label>Твій стиль життя</label>
+<div class="chips" data-name="lifestyle">
+  <div class="chip">Активний</div>
+  <div class="chip">Домашній</div>
+  <div class="chip">Творчий</div>
+  <div class="chip">Соціальний</div>
+  <div class="chip">Спортсмен</div>
+  <div class="chip">Тусовщик</div>
+  <div class="chip">Розмірений</div>
+  <div class="chip">Мандрівник</div>
+</div>
+<input type="hidden" name="lifestyle">
+
+<button class="primary-btn">Далі</button>
+<button name="skip" value="1" class="secondary-btn">Пропустити</button>
+
+{% elif step == 4 %}
+<h1>ЩО ТИ ШУКАЄШ?</h1>
+<div class="subtitle">Обери свої наміри</div>
+
+<label>Твої наміри?</label>
+<div class="chips" data-name="looking_for">
+  <div class="chip">Серйозні стосунки</div>
+  <div class="chip">Спілкування</div>
+  <div class="chip">Дружба</div>
+  <div class="chip">Спільні інтереси</div>
+  <div class="chip">Подорожі разом</div>
+  <div class="chip">Романтичні побачення</div>
+  <div class="chip">Нові знайомства</div>
+</div>
+<input type="hidden" name="looking_for">
+
+<label>Що для тебе важливо в знайомстві?</label>
+<div class="chips" data-name="values">
+  <div class="chip">Чесність</div>
+  <div class="chip">Легкість</div>
+  <div class="chip">Тактовність</div>
+  <div class="chip">Підтримка</div>
+  <div class="chip">Відвертість</div>
+  <div class="chip">Емоційна близькість</div>
+  <div class="chip">Щирість</div>
+</div>
+<input type="hidden" name="values">
+
+<button class="primary-btn">Завершити</button>
+<button name="skip" value="1" class="secondary-btn">Пропустити</button>
+
+{% endif %}
+</form>
+</div>
+
+<div class="step">{{ step }} / 4</div>
+</div>
+
+<script>
+document.querySelectorAll('.chips').forEach(group=>{
+  const hidden = document.querySelector(`input[name="${group.dataset.name}"]`);
+  group.querySelectorAll('.chip').forEach(chip=>{
+    chip.onclick = ()=>{
+      chip.classList.toggle('active');
+      const selected = [...group.querySelectorAll('.chip.active')]
+        .map(c=>c.textContent.trim());
+      hidden.value = selected.join(', ');
+    };
+  });
+});
+</script>
+<script>
+const input = document.getElementById('photoInput');
+if(input){
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    const img = document.getElementById('preview');
+    const plus = document.getElementById('plus');
+
+    img.src = URL.createObjectURL(file);
+    img.style.display = 'block';
+    plus.style.display = 'none';
+  };
+}
+</script>
+
+</body>
+</html>
