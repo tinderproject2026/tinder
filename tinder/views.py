@@ -4,7 +4,14 @@ from user.models import Profile
 
 
 def home(request):
-    return render(request, 'home.html')
+    user = None
+    user_id = request.session.get('user_id')
+    if user_id:
+        user = Profile.objects.get(id=user_id)
+
+    return render(request, 'home.html', {
+        'user': user
+    })
 
 
 def login(request):
@@ -22,7 +29,9 @@ def login(request):
             messages.error(request, 'Невірний пароль')
             return redirect('auth')
 
-        messages.success(request, f'Вітаю, {user.name} 💖')
+        request.session['user_id'] = user.id
+
+        
         return redirect('home')
 
     return render(request, 'auth.html')
@@ -36,7 +45,6 @@ def register(request):
 
         data = request.session.get('reg_data', {})
 
-        # КРОК 1
         if step == 1:
             data['name'] = request.POST.get('name')
             data['username'] = request.POST.get('username')
@@ -101,3 +109,34 @@ def register(request):
         'years': years,
         'days': days
     })
+
+def profile(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('auth')
+
+    user = Profile.objects.get(id=user_id)
+
+    if request.method == 'POST':
+        user.name = request.POST.get('name')
+        user.gender = request.POST.get('gender')
+        user.city = request.POST.get('city')
+        user.bio = request.POST.get('bio')
+        user.interests = request.POST.get('interests')
+        user.lifestyle = request.POST.get('lifestyle')
+        user.looking_for = request.POST.get('looking_for')
+        user.values = request.POST.get('values')
+
+        if request.FILES.get('photo'):
+            user.photo = request.FILES.get('photo')
+
+        user.save()
+        return redirect('/profile/')
+
+    return render(request, 'profile.html', {
+        'user': user
+    })
+
+def logout(request):
+    request.session.pop('user_id', None)
+    return redirect('home')

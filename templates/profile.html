@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Редагувати профіль</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+  margin: 0;
+  background: #eaf3ff;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR (ТОЧНО ЯК HOME) ===== */
+.sidebar {
+  width: 240px;
+  background: #f2f4f7;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo img {
+  width: 90px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.profile-link img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ===== MAIN ===== */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* ===== PROFILE CARD ===== */
+.profile-card {
+  background: #d9ecff;
+  border-radius: 28px;
+  padding: 30px;
+}
+
+/* HEADER */
+.profile-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+
+.actions button {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel {
+  background: #eef3fa;
+}
+
+.save {
+  background: #0b2c86;
+  color: #fff;
+}
+
+/* GRID */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr 1fr;
+  gap: 24px;
+}
+
+/* PHOTO */
+.photo-block img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.photo-block button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #0b2c86;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.photo-block input {
+  display: none;
+}
+
+.photo-placeholder {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #eef3fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #0b2c86;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #d0d8e6;
+}
+
+/* FIELDS */
+label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  margin-bottom: 16px;
+  background: #fff;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 110px;
+  resize: none;
+}
+
+.logout-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: #ffe3e3;
+  color: #b30000;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  background: #ffcccc;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chip {
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+}
+
+.chip span {
+  font-weight: 600;
+}
+
+.chip button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #666;
+}
+
+.add-chip {
+  background: #eaf1ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.add-plus {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dropdown {
+  background: #fff;
+  border-radius: 14px;
+  padding: 8px;
+  margin-top: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  max-width: 300px;
+}
+
+.dropdown.hidden {
+  display: none;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #eaf1ff;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div>
+    <div class="logo">
+      <img src="/images/logo.png">
+    </div>
+
+    <div class="nav">
+      <a href="/">🏠 Знайомства</a>
+      <a href="#">🔗 Симпатії</a>
+      <a href="#">🤍 Лайки</a>
+      <a href="#">✉️ Повідомлення</a>
+    </div>
+  </div>
+
+<a href="/profile/" class="profile-link">
+  {% if user.photo %}
+    <img src="{{ user.photo.url }}">
+  {% else %}
+    <div class="sidebar-avatar"></div>
+  {% endif %}
+  <span>{{ user.name }}</span>
+</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="profile-card">
+
+  <!-- HEADER -->
+<div class="actions">
+  <a href="/logout/" class="logout-btn">Вийти</a>
+
+  <button type="button" class="cancel" onclick="location.href='/'">
+    Скасувати зміни
+  </button>
+
+  <button type="submit" class="save">
+    Зберегти зміни
+  </button>
+</div>
+
+  <!-- GRID -->
+  <div class="profile-grid">
+
+<!-- PHOTO -->
+<div class="photo-block">
+
+  {% if user.photo %}
+    <img id="photoPreview" src="{{ user.photo.url }}">
+  {% else %}
+    <div id="photoPreview" class="photo-placeholder">+</div>
+  {% endif %}
+
+  <label>
+    <button type="button" onclick="document.getElementById('photoInput').click()">
+      Завантажити нове фото
+    </button>
+    <input
+      type="file"
+      name="photo"
+      id="photoInput"
+      accept="image/*"
+      style="display:none"
+    >
+  </label>
+
+</div>
+
+
+    <!-- COL 1 -->
+    <div>
+      <label>Імʼя</label>
+      <input name="name" value="{{ user.name }}">
+
+      <label>Стать</label>
+      <input name="gender" value="{{ user.gender }}">
+
+      <label>Місто</label>
+      <input name="city" value="{{ user.city }}">
+    </div>
+
+    <!-- COL 2 -->
+    <div>
+      <label>Про мене</label>
+      <textarea name="bio">{{ user.bio }}</textarea>
+
+      <label class="section-title">
+  Інтереси
+  <span id="addInterest" class="add-plus">+</span>
+</label>
+
+<div class="chips" id="interestsChips"></div>
+
+<div id="interestDropdown" class="dropdown hidden">
+  <div class="dropdown-item">Мистецтво</div>
+  <div class="dropdown-item">Кіно</div>
+  <div class="dropdown-item">Їжа</div>
+  <div class="dropdown-item">Музика</div>
+  <div class="dropdown-item">Книги</div>
+  <div class="dropdown-item">Спорт</div>
+  <div class="dropdown-item">Ігри</div>
+  <div class="dropdown-item">Подорожі</div>
+  <div class="dropdown-item">Фотографія</div>
+  <div class="dropdown-item">Велоспорт</div>
+  <div class="dropdown-item">Театр</div>
+  <div class="dropdown-item">Вечірки</div>
+</div>
+
+<input type="hidden" name="interests" id="interestsInput">
+
+      <label>Стиль життя</label>
+      <input name="lifestyle" value="{{ user.lifestyle }}">
+    </div>
+
+  </div>
+
+</div>
+
+</form>
+</div>
+
+<script>
+const input = document.getElementById('photoInput');
+const preview = document.getElementById('photoPreview');
+
+if (input) {
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    // якщо вже є <img>
+    if (preview.tagName === 'IMG') {
+      preview.src = url;
+    } else {
+      const img = document.createElement('img');
+      img.src = url;
+      img.id = 'photoPreview';
+      img.style.width = '140px';
+      img.style.height = '140px';
+      img.style.borderRadius = '50%';
+      img.style.objectFit = 'cover';
+
+      preview.replaceWith(img);
+    }
+  });
+}
+</script>
+
+
+<script>
+const chipsBox = document.getElementById("interestsChips");
+const addBtn = document.getElementById("addInterest");
+const dropdown = document.getElementById("interestDropdown");
+const hiddenInput = document.getElementById("interestsInput");
+
+let selected = "{{ user.interests|default:'' }}"
+  .split(",")
+  .map(i => i.trim())
+  .filter(Boolean);
+
+function render() {
+  chipsBox.innerHTML = "";
+  selected.forEach(val => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.innerHTML = `<span>${val}</span><button type="button">×</button>`;
+    chip.querySelector("button").onclick = () => {
+      selected = selected.filter(i => i !== val);
+      update();
+    };
+    chipsBox.appendChild(chip);
+  });
+}
+
+function update() {
+  hiddenInput.value = selected.join(", ");
+  render();
+}
+
+addBtn.onclick = () => {
+  dropdown.classList.toggle("hidden");
+};
+
+document.querySelectorAll(".dropdown-item").forEach(item => {
+  item.onclick = () => {
+    const value = item.textContent;
+    if (!selected.includes(value)) {
+      selected.push(value);
+      update();
+    }
+    dropdown.classList.add("hidden");
+  };
+});
+
+update();
+</script>
+
+
+
+</body>
+</html>
