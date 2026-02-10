@@ -10,4 +10,7 @@ urlpatterns = [
     path('login/', views.login, name='auth'),
     path('register/', views.register, name='register'),
 ]
-urlpatterns += static('/images/', document_root='images')
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static('/images/', document_root='images')
