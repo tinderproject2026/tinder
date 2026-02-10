@@ -25,7 +25,7 @@ def login(request):
             messages.error(request, 'Користувача не існує')
             return redirect('auth')
 
-        if user.password != password:
+        if not user.check_password(password):
             messages.error(request, 'Невірний пароль')
             return redirect('auth')
 
@@ -44,54 +44,75 @@ def register(request):
         step = int(request.POST.get('step'))
 
         data = request.session.get('reg_data', {})
+        profile_id = request.session.get('reg_profile_id')
+        profile = Profile.objects.filter(id=profile_id).first() if profile_id else None
 
         if step == 1:
-            data['name'] = request.POST.get('name')
-            data['username'] = request.POST.get('username')
-            data['password'] = request.POST.get('password')
+            name = request.POST.get('name', '').strip()
+            username = request.POST.get('username', '').strip()
+            password = request.POST.get('password', '')
+
+            # Перевірка чи існує користувач
+            if Profile.objects.filter(username=username).exists():
+                messages.error(request, 'Користувач з таким логіном вже існує')
+                return redirect('register')
 
             day = request.POST.get('birth_day')
             month = request.POST.get('birth_month')
             year = request.POST.get('birth_year')
 
+            birth_date = None
             if day and month and year:
-                data['birth_date'] = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+                birth_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
-            data['gender'] = request.POST.get('gender')
-            data['city'] = request.POST.get('city')
+            # Створюємо профіль
+            profile = Profile.objects.create(
+                username=username,
+                name=name,
+                birth_date=birth_date,
+                gender=request.POST.get('gender'),
+                city=request.POST.get('city')
+            )
+            profile.set_password(password)
+            profile.save()
+
+            request.session['reg_profile_id'] = profile.id
 
         # КРОК 2 (фото)
         elif step == 2:
-            pass
+            if not profile:
+                messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
+                return redirect('register')
+
+            photo = request.FILES.get('photo')
+            if photo:
+                profile.photo = photo
+                profile.save()
 
         # КРОК 3 (про себе)
         elif step == 3:
-            data['bio'] = request.POST.get('bio')
-            data['interests'] = request.POST.get('interests')
-            data['lifestyle'] = request.POST.get('lifestyle')
+            if not profile:
+                messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
+                return redirect('register')
+
+            profile.bio = request.POST.get('bio')
+            profile.interests = request.POST.get('interests')
+            profile.lifestyle = request.POST.get('lifestyle')
+            profile.save()
 
         # КРОК 4 (що шукає)
         elif step == 4:
-            data['looking_for'] = request.POST.get('looking_for')
-            data['values'] = request.POST.get('values')
+            if not profile:
+                messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
+                return redirect('register')
 
-            # фінальне створення
-            Profile.objects.create(
-                username=data['username'],
-                name=data['name'],
-                password=data['password'],
-                birth_date=data.get('birth_date') or None,
-                gender=data.get('gender'),
-                city=data.get('city'),
-                bio=data.get('bio'),
-                interests=data.get('interests'),
-                lifestyle=data.get('lifestyle'),
-                looking_for=data.get('looking_for'),
-                values=data.get('values'),
-                photo=request.FILES.get('photo')  # додано
-            )
+            profile.looking_for = request.POST.get('looking_for')
+            profile.values = request.POST.get('values')
+            profile.save()
 
+            # Очищаємо сесію
             request.session.pop('reg_data', None)
+            request.session.pop('reg_profile_id', None)
             messages.success(request, 'Реєстрація успішна 💖')
             return redirect('auth')
 
