@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from user.models import Profile
+from datetime import date
 
 
 def home(request):
@@ -145,8 +146,13 @@ def profile(request):
         user.bio = request.POST.get('bio')
         user.interests = request.POST.get('interests')
         user.lifestyle = request.POST.get('lifestyle')
-        user.looking_for = request.POST.get('looking_for')
-        user.values = request.POST.get('values')
+
+        # ДАТА НАРОДЖЕННЯ
+        day = request.POST.get('birth_day')
+        month = request.POST.get('birth_month')
+        year = request.POST.get('birth_year')
+        if day and month and year:
+            user.birth_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
         if request.FILES.get('photo'):
             user.photo = request.FILES.get('photo')
@@ -154,8 +160,17 @@ def profile(request):
         user.save()
         return redirect('/profile/')
 
+    current_year = date.today().year
+
     return render(request, 'profile.html', {
-        'user': user
+        'user': user,
+        'days': range(1, 32),
+        'years': range(current_year - 18, current_year - 70, -1),
+        'months': [
+            (1,"Січень"),(2,"Лютий"),(3,"Березень"),(4,"Квітень"),
+            (5,"Травень"),(6,"Червень"),(7,"Липень"),(8,"Серпень"),
+            (9,"Вересень"),(10,"Жовтень"),(11,"Листопад"),(12,"Грудень")
+        ]
     })
 
 def logout(request):

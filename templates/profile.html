@@ -72,11 +72,23 @@ body {
   padding: 30px;
 }
 
+.bio-hint {
+  font-size: 12px;
+  color: #2c2c2c;
+  opacity: 0.7;
+  margin-top: 6px;
+  max-width: 420px;
+  line-height: 1.4;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ===== PROFILE CARD ===== */
 .profile-card {
-  background: #d9ecff;
-  border-radius: 28px;
-  padding: 30px;
+  background: transparent;
+  border-radius: 0;
+  padding: 30px 40px;
 }
 
 /* HEADER */
@@ -117,12 +129,23 @@ body {
 }
 
 /* PHOTO */
-.photo-block img {
-  width: 140px;
-  height: 140px;
+.photo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-block img,
+.photo-placeholder {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 18px;
 }
 
 .photo-block button {
@@ -282,6 +305,88 @@ textarea {
   background: #eaf1ff;
 }
 
+.birth-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 18px;
+}
+
+.birth-row select {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: #fff;
+}
+
+.gender-switch {
+  display: flex;
+  background: #e3ebf5;
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.gender-option {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: .18s;
+}
+
+.gender-option.active {
+  background: #0b2c86;
+  color: white;
+  box-shadow: 0 6px 18px rgba(11,44,134,.25);
+}
+
+.gender-option:hover {
+  opacity: .85;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 56px;
+}
+
+.left-actions {
+  display: flex;
+  gap: 12px;
+}
+
+
+/* БІЛИЙ ХЕДЕР */
+.profile-header {
+  background: #ffffff;
+  padding: 18px 28px;
+  border-radius: 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+/* вирівнювання кнопок */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-actions {
+  display: flex;
+  gap: 12px;
+}
+
+
+
 
 </style>
 </head>
@@ -323,15 +428,19 @@ textarea {
 
   <!-- HEADER -->
 <div class="actions">
+
+  <div class="left-actions">
+    <button type="button" class="cancel" onclick="location.href='/'">
+      Скасувати зміни
+    </button>
+
+    <button type="submit" class="save">
+      Зберегти зміни
+    </button>
+  </div>
+
   <a href="/logout/" class="logout-btn">Вийти</a>
 
-  <button type="button" class="cancel" onclick="location.href='/'">
-    Скасувати зміни
-  </button>
-
-  <button type="submit" class="save">
-    Зберегти зміни
-  </button>
 </div>
 
   <!-- GRID -->
@@ -361,55 +470,129 @@ textarea {
 
 </div>
 
+<!-- COL 1 -->
+<div>
 
-    <!-- COL 1 -->
-    <div>
-      <label>Імʼя</label>
-      <input name="name" value="{{ user.name }}">
+  <label>Імʼя</label>
+  <input name="name" value="{{ user.name }}">
 
-      <label>Стать</label>
-      <input name="gender" value="{{ user.gender }}">
+<label>Стать</label>
 
-      <label>Місто</label>
-      <input name="city" value="{{ user.city }}">
-    </div>
-
-    <!-- COL 2 -->
-    <div>
-      <label>Про мене</label>
-      <textarea name="bio">{{ user.bio }}</textarea>
-
-      <label class="section-title">
-  Інтереси
-  <span id="addInterest" class="add-plus">+</span>
-</label>
-
-<div class="chips" id="interestsChips"></div>
-
-<div id="interestDropdown" class="dropdown hidden">
-  <div class="dropdown-item">Мистецтво</div>
-  <div class="dropdown-item">Кіно</div>
-  <div class="dropdown-item">Їжа</div>
-  <div class="dropdown-item">Музика</div>
-  <div class="dropdown-item">Книги</div>
-  <div class="dropdown-item">Спорт</div>
-  <div class="dropdown-item">Ігри</div>
-  <div class="dropdown-item">Подорожі</div>
-  <div class="dropdown-item">Фотографія</div>
-  <div class="dropdown-item">Велоспорт</div>
-  <div class="dropdown-item">Театр</div>
-  <div class="dropdown-item">Вечірки</div>
+<div class="gender-switch">
+  <div class="gender-option {% if user.gender != 'Жінка' %}active{% endif %}" data-value="Чоловік">
+    Чоловік
+  </div>
+  <div class="gender-option {% if user.gender == 'Жінка' %}active{% endif %}" data-value="Жінка">
+    Жінка
+  </div>
 </div>
 
-<input type="hidden" name="interests" id="interestsInput">
+<input type="hidden" name="gender" id="genderInput" value="{{ user.gender|default:'Чоловік' }}">
 
-      <label>Стиль життя</label>
-      <input name="lifestyle" value="{{ user.lifestyle }}">
-    </div>
+
+  <label>Місто</label>
+  <input name="city" value="{{ user.city }}">
+
+  <label>Дата народження</label>
+  <div class="birth-row">
+
+    <select name="birth_day">
+      {% for d in days %}
+        <option value="{{ d }}" {% if user.birth_date and user.birth_date.day == d %}selected{% endif %}>
+          {{ d|stringformat:"02d" }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="birth_month">
+      {% for m in months %}
+        <option value="{{ m.0 }}" {% if user.birth_date and user.birth_date.month == m.0 %}selected{% endif %}>
+          {{ m.1 }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="birth_year">
+      {% for y in years %}
+        <option value="{{ y }}" {% if user.birth_date and user.birth_date.year == y %}selected{% endif %}>
+          {{ y }}
+        </option>
+      {% endfor %}
+    </select>
 
   </div>
 
 </div>
+
+
+<!-- ===== COL 2 (ВИПРАВЛЕНО ВІДСТУПИ) ===== -->
+<div>
+
+  <!-- BIO -->
+  <div style="margin-bottom:30px;">
+    <label>Про мене</label>
+    <textarea name="bio">{{ user.bio }}</textarea>
+
+    <div class="bio-hint" style="margin-top:10px;">
+      Не вказуй конфіденційної інформації, свої соцмережі, інтимні вподобання та інше,
+      що не входить у наші правила спільноти. Така інформація буде видалена.
+    </div>
+  </div>
+
+
+  <!-- INTERESTS -->
+  <div style="margin-bottom:30px;">
+    <label class="section-title">
+      Інтереси
+      <span id="addInterest" class="add-plus">+</span>
+    </label>
+
+    <div class="chips" id="interestsChips"></div>
+
+    <div id="interestDropdown" class="dropdown hidden">
+      <div class="dropdown-item">Мистецтво</div>
+      <div class="dropdown-item">Кіно</div>
+      <div class="dropdown-item">Їжа</div>
+      <div class="dropdown-item">Музика</div>
+      <div class="dropdown-item">Книги</div>
+      <div class="dropdown-item">Спорт</div>
+      <div class="dropdown-item">Ігри</div>
+      <div class="dropdown-item">Подорожі</div>
+      <div class="dropdown-item">Фотографія</div>
+      <div class="dropdown-item">Велоспорт</div>
+      <div class="dropdown-item">Театр</div>
+      <div class="dropdown-item">Вечірки</div>
+    </div>
+
+    <input type="hidden" name="interests" id="interestsInput">
+  </div>
+
+
+  <!-- LIFESTYLE -->
+  <div style="margin-bottom:30px;">
+    <label class="section-title">
+      Стиль життя
+      <span id="addLifestyle" class="add-plus">+</span>
+    </label>
+
+    <div class="chips" id="lifestyleChips"></div>
+
+    <div id="lifestyleDropdown" class="dropdown hidden">
+      <div class="dropdown-item">Активний</div>
+      <div class="dropdown-item">Домашній</div>
+      <div class="dropdown-item">Творчий</div>
+      <div class="dropdown-item">Соціальний</div>
+      <div class="dropdown-item">Спортсмен</div>
+      <div class="dropdown-item">Тусовщик</div>
+      <div class="dropdown-item">Розмірений</div>
+      <div class="dropdown-item">Мандрівник</div>
+    </div>
+
+    <input type="hidden" name="lifestyle" id="lifestyleInput">
+  </div>
+
+</div>
+
 
 </form>
 </div>
@@ -490,7 +673,69 @@ document.querySelectorAll(".dropdown-item").forEach(item => {
 });
 
 update();
+
+
+// -------- LIFESTYLE --------
+const lifestyleBox = document.getElementById("lifestyleChips");
+const lifestyleBtn = document.getElementById("addLifestyle");
+const lifestyleDropdown = document.getElementById("lifestyleDropdown");
+const lifestyleInput = document.getElementById("lifestyleInput");
+
+let lifestyle = "{{ user.lifestyle|default:'' }}"
+  .split(",")
+  .map(i => i.trim())
+  .filter(Boolean);
+
+function renderLifestyle() {
+  lifestyleBox.innerHTML = "";
+  lifestyle.forEach(val => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.innerHTML = `<span>${val}</span><button type="button">×</button>`;
+    chip.querySelector("button").onclick = () => {
+      lifestyle = lifestyle.filter(i => i !== val);
+      updateLifestyle();
+    };
+    lifestyleBox.appendChild(chip);
+  });
+}
+
+function updateLifestyle() {
+  lifestyleInput.value = lifestyle.join(", ");
+  renderLifestyle();
+}
+
+lifestyleBtn.onclick = () => {
+  lifestyleDropdown.classList.toggle("hidden");
+};
+
+lifestyleDropdown.querySelectorAll(".dropdown-item").forEach(item => {
+  item.onclick = () => {
+    const value = item.textContent;
+    if (!lifestyle.includes(value)) {
+      lifestyle.push(value);
+      updateLifestyle();
+    }
+    lifestyleDropdown.classList.add("hidden");
+  };
+});
+
+updateLifestyle();
 </script>
+
+<script>
+const genderOptions = document.querySelectorAll(".gender-option");
+const genderInput = document.getElementById("genderInput");
+
+genderOptions.forEach(btn=>{
+  btn.onclick=()=>{
+    genderOptions.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    genderInput.value=btn.dataset.value;
+  };
+});
+</script>
+
 
 
 
