@@ -1,7 +1,115 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from user.models import Profile
+from user.models import Profile, Like, Match
 from datetime import date
+import random
+import random
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.db.models import Q
+
+def likes(request):
+    if not request.session.get("user_id"):
+        return redirect("auth")
+
+    me = Profile.objects.get(id=request.session["user_id"])
+
+    profiles = Profile.objects.filter(
+        sent_likes__to_user=me
+    ).exclude(
+        received_likes__from_user=me
+    )
+
+    return render(request, "likes.html", {
+    "profiles": profiles,
+    "current_user": me
+})
+
+def sympathy(request):
+    user = get_current_user(request)
+
+    matches = Match.objects.filter(user1=user) | Match.objects.filter(user2=user)
+
+    profiles = []
+    for m in matches:
+        if m.user1 == user:
+            profiles.append(m.user2)
+        else:
+            profiles.append(m.user1)
+
+    return render(request, "sympathy.html", {
+        "profiles": profiles,
+        "current_user": user   # ← ВАЖЛИВО
+    })
+
+
+
+def like_user(request, user_id):
+    me = Profile.objects.get(id=request.session["user_id"])
+    target = Profile.objects.get(id=user_id)
+
+    Like.objects.get_or_create(from_user=me, to_user=target)
+
+    return redirect("dating")
+
+
+def dislike_user(request, user_id):
+    return redirect("dating")
+
+
+def accept_like(request, user_id):
+    me = Profile.objects.get(id=request.session["user_id"])
+    sender = Profile.objects.get(id=user_id)
+
+    # створюємо матч
+    Match.objects.get_or_create(user1=me, user2=sender)
+
+    # ❗ ВИДАЛЯЄМО ВСІ ЛАЙКИ МІЖ НИМИ
+    Like.objects.filter(from_user=sender, to_user=me).delete()
+    Like.objects.filter(from_user=me, to_user=sender).delete()
+
+    return redirect("likes")
+
+def reject_like(request, user_id):
+    me = Profile.objects.get(id=request.session["user_id"])
+    sender = Profile.objects.get(id=user_id)
+
+    Like.objects.filter(from_user=sender, to_user=me).delete()
+
+    return redirect("likes")
+
+
+def get_current_user(request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return None
+    return Profile.objects.filter(id=user_id).first()
+
+
+def login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('user_id'):
+            return redirect('auth')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@login_required
+def dating(request):
+    if not request.session.get("user_id"):
+        return redirect("auth")
+
+    me = Profile.objects.get(id=request.session["user_id"])
+
+    viewed = Like.objects.filter(from_user=me).values_list("to_user", flat=True)
+
+    profiles = Profile.objects.exclude(id=me.id).exclude(id__in=viewed)
+
+    profile = random.choice(list(profiles)) if profiles else None
+
+    return render(request, "dating.html", {
+    "profile": profile,
+    "current_user": me
+})
 
 
 def home(request):

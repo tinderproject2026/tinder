@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Лайки</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;font-family:'Inter',sans-serif}
+body {
+  margin: 0;
+  background: #eaf3ff;
+  display: flex;
+  min-height: 100vh;
+}
+/* GRID */
+.main{flex:1;padding:40px}
+h1{margin:0 0 6px;font-size:32px}
+.count{color:#333;margin-bottom:30px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,180px);
+  gap:22px;
+}
+
+.card{
+  position:relative;
+  height:260px;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* gradient */
+.card::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:50%;
+  background:linear-gradient(to top, rgba(0,0,0,.75), transparent);
+}
+
+.info{
+  position:absolute;
+  bottom:60px;
+  left:12px;
+  color:#fff;
+  font-weight:600;
+}
+
+/* buttons */
+.actions{
+  position:absolute;
+  bottom:12px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+}
+
+.btn{
+  width:36px;height:36px;border-radius:50%;
+  border:none;cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.dislike{background:white;color:red}
+.like{background:white;color:green}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #f2f4f7;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo h2 {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.profile img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #d0d8e6;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div>
+  <div class="logo">
+    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
+  </div>
+
+    <div class="nav">
+
+      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        🏠 Знайомства
+      </a>
+
+      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        🔗 Симпатії
+      </a>
+
+      <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+        🤍 Лайки
+      </a>
+
+    </div>
+</div>
+
+<a href="/profile/" class="profile">
+{% if current_user and current_user.photo %}
+    <img src="{{ current_user.photo.url }}">
+{% else %}
+    <div class="sidebar-avatar"></div>
+{% endif %}
+<span>{{ current_user.name|default:"Профіль" }}</span>
+</a>
+</div>
+
+<div class="main">
+  <h1>Лайки</h1>
+  <div class="count">{{ profiles|length }} лайків</div>
+
+  <div class="grid">
+    {% for p in profiles %}
+    <div class="card">
+        {% if p.photo %}
+             <img src="{{ p.photo.url }}">
+        {% endif %}
+      <div class="info">{{ p.name }}, {{ p.age }}</div>
+
+      <div class="actions">
+<form method="POST" action="/reject/{{ p.id }}/">
+  {% csrf_token %}
+  <button class="btn dislike">✕</button>
+</form>
+
+<form method="POST" action="/accept/{{ p.id }}/">
+  {% csrf_token %}
+  <button class="btn like">❤</button>
+</form>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+</html>

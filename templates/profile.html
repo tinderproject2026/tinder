@@ -385,6 +385,86 @@ textarea {
   gap: 12px;
 }
 
+.sidebar-bottom{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.logout-link{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:#ffe3e3;
+  color:#b30000;
+  text-decoration:none;
+  font-weight:600;
+  text-align:center;
+}
+
+.login-link, .register-link{
+  padding:10px;
+  border-radius:12px;
+  background:#132c74;
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-weight:600;
+}
+
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #f2f4f7;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo h2 {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.profile img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 
 
 
@@ -396,25 +476,34 @@ textarea {
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div>
-    <div class="logo">
-      <img src="/images/logo.png">
-    </div>
-
-    <div class="nav">
-      <a href="/">🏠 Знайомства</a>
-      <a href="#">🔗 Симпатії</a>
-      <a href="#">🤍 Лайки</a>
-      <a href="#">✉️ Повідомлення</a>
-    </div>
+  <div class="logo">
+    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
   </div>
 
-<a href="/profile/" class="profile-link">
-  {% if user.photo %}
-    <img src="{{ user.photo.url }}">
+    <div class="nav">
+
+      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        🏠 Знайомства
+      </a>
+
+      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        🔗 Симпатії
+      </a>
+
+      <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+        🤍 Лайки
+      </a>
+
+    </div>
+</div>
+
+<a href="/profile/" class="profile">
+  {% if user and user.photo %}
+    <img src="{{ user.photo.url }}" alt="Profile photo">
   {% else %}
     <div class="sidebar-avatar"></div>
   {% endif %}
-  <span>{{ user.name }}</span>
+  <span>{{ user.name|default:"Профіль" }}</span>
 </a>
 </div>
 

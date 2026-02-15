@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Знайомства</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;font-family:'Inter',sans-serif}
+
+body {
+  margin: 0;
+  background: #eaf3ff;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #f2f4f7;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo h2 {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.profile img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #d0d8e6;
+}
+
+/* ===== CARD ===== */
+
+.main{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.card{
+  width:420px;
+  height:680px;
+  border-radius:26px;
+  overflow:hidden;
+  position:relative;
+  background:#ccc;
+  box-shadow:0 25px 60px rgba(0,0,0,.25);
+  transition:.35s ease;
+}
+
+.card.swipe-left{transform:translateX(-500px) rotate(-20deg);opacity:0}
+.card.swipe-right{transform:translateX(500px) rotate(20deg);opacity:0}
+
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.card::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:28%;
+  background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.15), transparent);
+  pointer-events:none;
+}
+
+.info{
+  position:absolute;
+  bottom:110px;
+  left:24px;
+  right:24px;
+  color:white;
+}
+
+.name{font-size:28px;font-weight:800}
+.bio{font-size:14px;opacity:.95;margin-top:6px}
+
+/* buttons */
+.actions{
+  position:absolute;
+  bottom:18px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:26px;
+}
+
+.btn{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;cursor:pointer;border:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+
+.dislike{background:white;color:#ff4d4f}
+.like{background:white;color:#22c55e}
+
+.empty{font-size:22px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div>
+  <div class="logo">
+    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
+  </div>
+
+    <div class="nav">
+
+      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        🏠 Знайомства
+      </a>
+
+      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        🔗 Симпатії
+      </a>
+
+      <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+        🤍 Лайки
+      </a>
+
+    </div>
+</div>
+
+<a href="/profile/" class="profile">
+{% if current_user and current_user.photo %}
+    <img src="{{ current_user.photo.url }}">
+{% else %}
+    <div class="sidebar-avatar"></div>
+{% endif %}
+<span>{{ current_user.name|default:"Профіль" }}</span>
+</a>
+</div>
+
+
+<!-- CARD -->
+<div class="main">
+
+{% if profile %}
+<div class="card" id="card" data-id="{{ profile.id }}">
+
+  {% if profile.photo %}
+    <img src="{{ profile.photo.url }}">
+  {% endif %}
+
+  <div class="info">
+    <div class="name">
+      {{ profile.name }}
+    </div>
+    <div class="bio">{{ profile.bio }}</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn dislike" onclick="sendAction('dislike')">✕</button>
+    <button class="btn like" onclick="sendAction('like')">❤</button>
+  </div>
+
+</div>
+{% else %}
+<div class="empty">Немає анкет 😢</div>
+{% endif %}
+
+</div>
+
+<script>
+function getCookie(name){
+    let cookieValue=null;
+    if(document.cookie && document.cookie!==''){
+        const cookies=document.cookie.split(';');
+        for(let i=0;i<cookies.length;i++){
+            const cookie=cookies[i].trim();
+            if(cookie.substring(0,name.length+1)===(name+'=')){
+                cookieValue=decodeURIComponent(cookie.substring(name.length+1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken=getCookie('csrftoken');
+
+function sendAction(type){
+  const card=document.getElementById("card");
+  const id=card.dataset.id;
+
+  card.classList.add(type==="like"?"swipe-right":"swipe-left");
+
+  fetch(`/${type}/${id}/`,{
+    method:"POST",
+    headers:{
+      "X-CSRFToken":csrftoken,
+      "Content-Type":"application/json"
+    }
+  }).then(()=>setTimeout(()=>location.reload(),350));
+}
+</script>
+
+
+</body>
+</html>

@@ -157,6 +157,34 @@ body {
   border-radius: 50%;
   background: #d0d8e6;
 }
+
+.sidebar-bottom{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.logout-link{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:#ffe3e3;
+  color:#b30000;
+  text-decoration:none;
+  font-weight:600;
+  text-align:center;
+}
+
+.login-link, .register-link{
+  padding:10px;
+  border-radius:12px;
+  background:#132c74;
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-weight:600;
+}
+
 </style>
 </head>
 
@@ -169,12 +197,21 @@ body {
     <img src="/images/logo.png" alt="SoulLink" class="logo-img">
   </div>
 
-  <div class="nav">
-    <a href="/register/">🏠 Знайомства</a>
-    <a href="/register/">🔗 Симпатії</a>
-    <a href="/register/">🤍 Лайки</a>
-    <a href="/register/">✉️ Повідомлення</a>
-  </div>
+    <div class="nav">
+
+      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        🏠 Знайомства
+      </a>
+
+      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        🔗 Симпатії
+      </a>
+
+      <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+        🤍 Лайки
+      </a>
+
+    </div>
 </div>
 
 <a href="/profile/" class="profile">
