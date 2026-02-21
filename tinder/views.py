@@ -1,12 +1,36 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from user.models import Profile, Like, Match
+from user.models import Profile, Like, Match, ChatMessage
 from datetime import date
 import random
 import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
+from django.utils import timezone
+
+def calculate_age(birth_date):
+    if not birth_date:
+        return None
+    today = date.today()
+    return today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+
+def get_opposite_gender_filter(gender_value):
+    if not gender_value:
+        return None
+
+    g = str(gender_value).strip().lower()
+
+    male_values = {"чоловік", "чоловiк", "male", "man", "m"}
+    female_values = {"жінка", "жiнка", "female", "woman", "f"}
+
+    if g in male_values:
+        return Q(gender__iexact="Жінка") | Q(gender__iexact="Жiнка") | Q(gender__iexact="female") | Q(gender__iexact="woman") | Q(gender__iexact="f")
+
+    if g in female_values:
+        return Q(gender__iexact="Чоловік") | Q(gender__iexact="Чоловiк") | Q(gender__iexact="male") | Q(gender__iexact="man") | Q(gender__iexact="m")
+
+    return None
 
 def likes(request):
     if not request.session.get("user_id"):
@@ -20,8 +44,14 @@ def likes(request):
         received_likes__from_user=me
     )
 
+    like_cards = [
+        {"profile": p, "age": calculate_age(p.birth_date)}
+        for p in profiles
+    ]
+
     return render(request, "likes.html", {
     "profiles": profiles,
+    "like_cards": like_cards,
     "current_user": me
 })
 
@@ -37,8 +67,14 @@ def sympathy(request):
         else:
             profiles.append(m.user1)
 
+    sympathy_cards = [
+        {"profile": p, "age": calculate_age(p.birth_date)}
+        for p in profiles
+    ]
+
     return render(request, "sympathy.html", {
         "profiles": profiles,
+        "sympathy_cards": sympathy_cards,
         "current_user": user   # ← ВАЖЛИВО
     })
 
@@ -86,6 +122,93 @@ def get_current_user(request):
     return Profile.objects.filter(id=user_id).first()
 
 
+def chat(request, partner_id=None):
+    if not request.session.get("user_id"):
+        return redirect("auth")
+
+    me = Profile.objects.get(id=request.session["user_id"])
+
+    matches = Match.objects.filter(user1=me) | Match.objects.filter(user2=me)
+
+    partners = []
+    seen_partner_ids = set()
+    for m in matches:
+        if m.user1_id == me.id:
+            partner = m.user2
+        else:
+            partner = m.user1
+        if partner.id not in seen_partner_ids:
+            seen_partner_ids.add(partner.id)
+            partners.append(partner)
+
+    partner_map = {p.id: p for p in partners}
+
+    conversations = []
+    today = timezone.localdate()
+    weekday_map = {
+        0: "пн",
+        1: "вт",
+        2: "ср",
+        3: "чт",
+        4: "пт",
+        5: "сб",
+        6: "нд",
+    }
+
+    for partner in partners:
+        last_message = ChatMessage.objects.filter(
+            Q(sender=me, receiver=partner) | Q(sender=partner, receiver=me)
+        ).order_by("-created").first()
+
+        time_label = ""
+        if last_message:
+            local_created = timezone.localtime(last_message.created)
+            if local_created.date() == today:
+                time_label = local_created.strftime("%H:%M")
+            else:
+                time_label = weekday_map.get(local_created.weekday(), local_created.strftime("%d.%m"))
+
+        conversations.append({
+            "partner": partner,
+            "last_message": last_message,
+            "last_time": last_message.created if last_message else None,
+            "time_label": time_label,
+            "is_mine": last_message.sender_id == me.id if last_message else False,
+        })
+
+    conversations.sort(
+        key=lambda c: c["last_time"].timestamp() if c["last_time"] else 0,
+        reverse=True
+    )
+
+    active_partner = None
+    if partner_id:
+        active_partner = partner_map.get(partner_id)
+        if not active_partner:
+            return redirect("chat")
+    elif partner_id is None:
+        active_partner = None
+
+    if request.method == "POST" and active_partner:
+        text = request.POST.get("text", "").strip()
+        if text:
+            ChatMessage.objects.create(sender=me, receiver=active_partner, text=text)
+        return redirect(f"/messages/{active_partner.id}/")
+
+    thread_messages = []
+    if active_partner:
+        thread_messages = ChatMessage.objects.filter(
+            Q(sender=me, receiver=active_partner) | Q(sender=active_partner, receiver=me)
+        ).order_by("created")
+
+    return render(request, "messages.html", {
+        "current_user": me,
+        "conversations": conversations,
+        "active_partner": active_partner,
+        "thread_messages": thread_messages,
+    })
+
+
 def login_required(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.session.get('user_id'):
@@ -104,10 +227,15 @@ def dating(request):
 
     profiles = Profile.objects.exclude(id=me.id).exclude(id__in=viewed)
 
+    opposite_gender_filter = get_opposite_gender_filter(me.gender)
+    if opposite_gender_filter is not None:
+        profiles = profiles.filter(opposite_gender_filter)
+
     profile = random.choice(list(profiles)) if profiles else None
 
     return render(request, "dating.html", {
     "profile": profile,
+    "profile_age": calculate_age(profile.birth_date) if profile else None,
     "current_user": me
 })
 

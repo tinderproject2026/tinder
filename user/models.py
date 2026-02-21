@@ -40,3 +40,13 @@ class Match(models.Model):
     user1 = models.ForeignKey(Profile, related_name="match_user1", on_delete=models.CASCADE)
     user2 = models.ForeignKey(Profile, related_name="match_user2", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(Profile, related_name="sent_messages", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Profile, related_name="received_messages", on_delete=models.CASCADE)
+    text = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created"]

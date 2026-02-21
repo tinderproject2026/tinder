@@ -2,212 +2,216 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Лайки</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;font-family:'Inter',sans-serif}
-body {
-  margin: 0;
-  background: #eaf3ff;
-  display: flex;
-  min-height: 100vh;
+:root{
+  --page-bg:#c9dbef;
+  --sidebar-bg:#f4f5f6;
+  --text:#0f1114;
+  --green:#17c344;
+  --red:#ef4338;
+  --accent:#0d2a78;
 }
-/* GRID */
-.main{flex:1;padding:40px}
-h1{margin:0 0 6px;font-size:32px}
-.count{color:#333;margin-bottom:30px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
+body{background:var(--page-bg);color:var(--text)}
+.layout{min-height:100vh;display:grid;grid-template-columns:300px 1fr}
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,180px);
-  gap:22px;
+.sidebar{background:var(--sidebar-bg);padding:32px 36px 30px;display:flex;flex-direction:column;justify-content:space-between}
+.logo{display:flex;justify-content:center;margin-bottom:34px}
+.logo-img{width:126px;height:auto}
+.nav{display:flex;flex-direction:column;gap:34px}
+.nav a{text-decoration:none;display:flex;align-items:center;gap:16px}
+.nav a svg{width:30px;height:30px;stroke:#81858d;stroke-width:1.9;fill:none}
+.nav-text{color:#2d3138;font-size:16px;line-height:22px;font-weight:500;letter-spacing:-0.18px}
+.nav a.active .nav-text{color:#0f1114;font-weight:600}
+.nav a.active svg{stroke:#0f1114}
+.profile{display:flex;align-items:center;gap:12px;text-decoration:none;color:#2d3138}
+.profile img,.sidebar-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.sidebar-avatar{background:#d4d9e1}
+.profile-name{font-size:16px;line-height:22px;font-weight:500;letter-spacing:-0.18px}
+
+.main{padding:40px 34px 24px;position:relative}
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.header h1{font-size:36px;line-height:42px;margin-bottom:8px;font-weight:700;letter-spacing:-0.2px}
+.count{font-size:24px;line-height:32px;font-weight:500;color:#2d3540}
+.filter-btn{margin-top:8px;border:none;background:transparent;cursor:pointer}
+.filter-btn svg{width:38px;height:38px;stroke:#2f3640;fill:none;stroke-width:1.8}
+
+.grid{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:18px}
+.card{position:relative;min-height:430px;border-radius:22px;overflow:hidden;background:#a2b5cb;box-shadow:0 10px 20px rgba(0,0,0,.2)}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.82) 100%)}
+.story-bars{position:absolute;top:14px;left:14px;right:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;z-index:2}
+.story-bars span{height:3px;border-radius:5px;background:rgba(255,255,255,.6)}
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;color:rgba(255,255,255,.88);font-size:30px;font-weight:300;pointer-events:none}
+.slide-arrow.left{left:12px}.slide-arrow.right{right:12px}
+.card-info{position:absolute;left:16px;right:16px;bottom:18px;z-index:3}
+.activity{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.93);font-size:13px;line-height:18px;font-weight:500}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green)}
+.name-row{margin-top:8px;display:flex;align-items:center;gap:8px;color:#fff}
+.name{font-size:18px;line-height:24px;font-weight:600;text-shadow:0 2px 5px rgba(0,0,0,.22)}
+.check{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.check svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.actions{margin-top:18px;display:flex;justify-content:center;gap:16px}
+.actions form{margin:0}
+.action-btn{width:48px;height:48px;border:none;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 7px 16px rgba(0,0,0,.24);display:flex;align-items:center;justify-content:center}
+.action-btn svg{width:24px;height:24px;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.action-btn.reject svg{stroke:var(--red);stroke-width:1.8}
+.action-btn.accept svg{stroke:var(--green);stroke-width:1.8}
+
+.empty{min-height:62vh;display:flex;align-items:center;justify-content:center;text-align:center}
+.empty h2{font-size:34px;line-height:42px;font-weight:700;margin-bottom:18px}
+.empty a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;border-radius:14px;padding:12px 24px;font-size:18px;line-height:24px;font-weight:500}
+
+.chat-fab{position:fixed;right:24px;bottom:22px;z-index:10;background:#fff;color:#1f1f1f;text-decoration:none;border-radius:999px;box-shadow:0 16px 34px rgba(0,0,0,.18);display:flex;align-items:center;gap:12px;padding:14px 20px}
+.chat-fab svg{width:25px;height:25px;stroke:#1f1f1f;stroke-width:1.8;fill:none}
+.chat-fab-text{font-size:20px;line-height:24px;font-weight:500}
+.chat-fab img{width:36px;height:36px;border-radius:50%;object-fit:cover;margin-left:10px}
+
+@media (max-width:1600px){.grid{grid-template-columns:repeat(4,minmax(210px,1fr));}}
+@media (max-width:1320px){
+  .layout{grid-template-columns:96px 1fr}
+  .sidebar{padding:22px 16px}
+  .logo{margin-bottom:18px}.logo-img{width:54px}
+  .nav{gap:22px;align-items:center}
+  .nav-text,.profile-name{display:none}
+  .profile{justify-content:center}
+  .grid{grid-template-columns:repeat(3,minmax(180px,1fr))}
 }
-
-.card{
-  position:relative;
-  height:260px;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 12px 30px rgba(0,0,0,.25);
+@media (max-width:920px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:block;border-bottom:1px solid rgba(0,0,0,.06);padding:14px}
+  .logo{margin-bottom:12px}.logo-img{width:86px}
+  .nav{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:12px}
+  .nav a{background:#fff;border-radius:12px;padding:8px 10px}
+  .nav a svg{width:20px;height:20px}
+  .nav-text{display:inline;font-size:14px;line-height:20px;font-weight:600}
+  .profile{justify-content:center}.profile-name{display:inline;font-size:14px;line-height:20px}
+  .main{padding:20px 12px 86px}
+  .header h1{font-size:38px;margin-bottom:8px}
+  .count{font-size:20px;line-height:24px}
+  .grid{grid-template-columns:repeat(2,minmax(150px,1fr));gap:12px}
+  .card{min-height:320px;border-radius:18px}
+  .activity{font-size:12px;line-height:16px}
+  .dot{width:10px;height:10px}
+  .name{font-size:16px;line-height:20px}
+  .check,.check svg{width:20px;height:20px}
+  .action-btn{width:40px;height:40px}
+  .action-btn svg{width:20px;height:20px}
+  .empty h2{font-size:32px;line-height:40px}
+  .empty a{font-size:16px;line-height:22px;padding:12px 22px}
+  .chat-fab{left:12px;right:12px;bottom:12px;justify-content:center}
+  .chat-fab-text{font-size:18px;line-height:22px}
 }
-
-.card img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/* gradient */
-.card::after{
-  content:'';
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:50%;
-  background:linear-gradient(to top, rgba(0,0,0,.75), transparent);
-}
-
-.info{
-  position:absolute;
-  bottom:60px;
-  left:12px;
-  color:#fff;
-  font-weight:600;
-}
-
-/* buttons */
-.actions{
-  position:absolute;
-  bottom:12px;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-}
-
-.btn{
-  width:36px;height:36px;border-radius:50%;
-  border:none;cursor:pointer;font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-}
-
-.dislike{background:white;color:red}
-.like{background:white;color:green}
-
-/* SIDEBAR */
-.sidebar {
-  width: 240px;
-  background: #f2f4f7;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.logo-img {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.logo h2 {
-  margin: 6px 0 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #111;
-}
-
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-.nav a {
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #333;
-}
-
-.profile img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.sidebar-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #d0d8e6;
-}
-
-
 </style>
 </head>
-
 <body>
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div>
-  <div class="logo">
-    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
-  </div>
-
-    <div class="nav">
-
-      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
-        🏠 Знайомства
-      </a>
-
-      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
-        🔗 Симпатії
-      </a>
-
-      <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
-        🤍 Лайки
-      </a>
-
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="logo"><img src="/images/logo.png" alt="SoulLink" class="logo-img"></div>
+      <nav class="nav">
+        <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>
+          <span class="nav-text">Знайомства</span>
+        </a>
+        <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 1 0-7l1.5-1.5a5 5 0 0 1 7 7L17 13"/><path d="M14 11a5 5 0 0 1 0 7L12.5 19.5a5 5 0 1 1-7-7L7 11"/><path d="M8 12h8"/></svg>
+          <span class="nav-text">Симпатії</span>
+        </a>
+        <a class="active" href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.2-4.2-9.5-8.2C.7 9.8 2 5.7 6.2 5.1c2.3-.3 4.2.7 5.8 2.8 1.6-2.1 3.5-3.1 5.8-2.8 4.2.6 5.5 4.7 3.7 7.7C19.2 16.8 12 21 12 21z"/></svg>
+          <span class="nav-text">Лайки</span>
+        </a>
+        <a href="/messages/"><svg viewBox="0 0 24 24"><path d="M22 3 11 14"/><path d="m22 3-7 18-4-8-8-4z"/></svg><span class="nav-text">Повідомлення</span></a>
+      </nav>
     </div>
-</div>
+    <a href="/profile/" class="profile">
+      {% if current_user and current_user.photo %}<img src="{{ current_user.photo.url }}" alt="{{ current_user.name }}">{% else %}<div class="sidebar-avatar"></div>{% endif %}
+      <span class="profile-name">{{ current_user.name|default:"Профіль" }}</span>
+    </a>
+  </aside>
 
-<a href="/profile/" class="profile">
-{% if current_user and current_user.photo %}
-    <img src="{{ current_user.photo.url }}">
-{% else %}
-    <div class="sidebar-avatar"></div>
-{% endif %}
-<span>{{ current_user.name|default:"Профіль" }}</span>
-</a>
-</div>
-
-<div class="main">
-  <h1>Лайки</h1>
-  <div class="count">{{ profiles|length }} лайків</div>
-
-  <div class="grid">
-    {% for p in profiles %}
-    <div class="card">
-        {% if p.photo %}
-             <img src="{{ p.photo.url }}">
-        {% endif %}
-      <div class="info">{{ p.name }}, {{ p.age }}</div>
-
-      <div class="actions">
-<form method="POST" action="/reject/{{ p.id }}/">
-  {% csrf_token %}
-  <button class="btn dislike">✕</button>
-</form>
-
-<form method="POST" action="/accept/{{ p.id }}/">
-  {% csrf_token %}
-  <button class="btn like">❤</button>
-</form>
-
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1>Лайки</h1>
+        <div class="count">{{ profiles|length }} лайки</div>
       </div>
+      <button class="filter-btn" type="button" aria-label="Фільтри">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M6 6a2 2 0 1 0 0 .01M3 12h18M14 12a2 2 0 1 0 0 .01M3 18h18M10 18a2 2 0 1 0 0 .01"/></svg>
+      </button>
     </div>
-    {% endfor %}
-  </div>
+
+    {% if like_cards %}
+      <section class="grid">
+        {% for item in like_cards %}
+          <article class="card">
+            {% if item.profile.photo %}<img src="{{ item.profile.photo.url }}" alt="{{ item.profile.name }}">{% else %}<img src="/images/no-image.png" alt="No image">{% endif %}
+            <div class="story-bars"><span></span><span></span><span></span><span></span></div>
+            <div class="slide-arrow left">&lsaquo;</div><div class="slide-arrow right">&rsaquo;</div>
+            <div class="card-info">
+              <div class="activity"><span class="dot"></span><span>Остання активність</span></div>
+              <div class="name-row">
+                <span class="name">{{ item.profile.name }}{% if item.age %} | {{ item.age }}{% endif %}</span>
+                <span class="check" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"></circle><path d="m8.6 12.2 2.2 2.3 4.6-4.8"></path></svg></span>
+              </div>
+              <div class="actions">
+                <form method="POST" action="/reject/{{ item.profile.id }}/">{% csrf_token %}
+                  <button class="action-btn reject" type="submit" aria-label="Відхилити"><svg viewBox="0 0 24 24"><path d="M5 5 19 19"/><path d="M19 5 5 19"/></svg></button>
+                </form>
+                <form method="POST" action="/accept/{{ item.profile.id }}/">{% csrf_token %}
+                  <button class="action-btn accept" type="submit" aria-label="Прийняти"><svg viewBox="0 0 24 24"><path d="M12 20.6S4 15.9 4 10.3C4 7.9 5.8 6 8.2 6c1.5 0 2.9.7 3.8 1.9C12.9 6.7 14.3 6 15.8 6 18.2 6 20 7.9 20 10.3c0 5.6-8 10.3-8 10.3z"/></svg></button>
+                </form>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% elif profiles %}
+      <section class="grid">
+        {% for p in profiles %}
+          <article class="card">
+            {% if p.photo %}<img src="{{ p.photo.url }}" alt="{{ p.name }}">{% else %}<img src="/images/no-image.png" alt="No image">{% endif %}
+            <div class="story-bars"><span></span><span></span><span></span><span></span></div>
+            <div class="slide-arrow left">&lsaquo;</div><div class="slide-arrow right">&rsaquo;</div>
+            <div class="card-info">
+              <div class="activity"><span class="dot"></span><span>Остання активність</span></div>
+              <div class="name-row">
+                <span class="name">{{ p.name }}</span>
+                <span class="check" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"></circle><path d="m8.6 12.2 2.2 2.3 4.6-4.8"></path></svg></span>
+              </div>
+              <div class="actions">
+                <form method="POST" action="/reject/{{ p.id }}/">{% csrf_token %}
+                  <button class="action-btn reject" type="submit" aria-label="Відхилити"><svg viewBox="0 0 24 24"><path d="M5 5 19 19"/><path d="M19 5 5 19"/></svg></button>
+                </form>
+                <form method="POST" action="/accept/{{ p.id }}/">{% csrf_token %}
+                  <button class="action-btn accept" type="submit" aria-label="Прийняти"><svg viewBox="0 0 24 24"><path d="M12 20.6S4 15.9 4 10.3C4 7.9 5.8 6 8.2 6c1.5 0 2.9.7 3.8 1.9C12.9 6.7 14.3 6 15.8 6 18.2 6 20 7.9 20 10.3c0 5.6-8 10.3-8 10.3z"/></svg></button>
+                </form>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <div class="empty">
+        <div>
+          <h2>Поки ти нікому не відгукнулася.</h2>
+          <a href="/dating/">Перейти до знайомств</a>
+        </div>
+      </div>
+    {% endif %}
+  </main>
 </div>
 
+<a href="/messages/" class="chat-fab" aria-label="Повідомлення">
+  <svg viewBox="0 0 24 24"><path d="M22 3 11 14"/><path d="m22 3-7 18-4-8-8-4z"/></svg>
+  <span class="chat-fab-text">Повідомлення</span>
+  {% if current_user and current_user.photo %}<img src="{{ current_user.photo.url }}" alt="{{ current_user.name }}">{% else %}<div class="sidebar-avatar"></div>{% endif %}
+</a>
 </body>
 </html>

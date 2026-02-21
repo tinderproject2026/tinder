@@ -4,255 +4,234 @@
 <meta charset="UTF-8">
 <title>Tinder 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+*{box-sizing:border-box;font-family:'Montserrat',sans-serif}
 
-body {
-  margin: 0;
-  background: #eaf3ff;
-  display: flex;
-  min-height: 100vh;
+body{
+  margin:0;
+  background:#eaf3ff;
+  display:flex;
+  min-height:100vh;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 240px;
-  background: #f2f4f7;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.logo h2 {
-  margin: 6px 0 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #111;
-}
-
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-.nav a {
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #333;
-}
-
-.profile img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* MAIN */
-.main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-/* HERO CARD */
-.main-card {
-  background: #fff;
-  width: 460px;
-  padding: 48px 40px;
-  border-radius: 28px;
-  box-shadow: 0 30px 80px rgba(0,0,0,.15);
-  text-align: center;
-}
-
-.main-card h1 {
-  font-size: 32px;
-  margin-bottom: 12px;
-  color: #111;
-}
-
-.main-card p {
-  font-size: 15px;
-  color: #555;
-  margin-bottom: 28px;
-}
-
-.start-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  border: none;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  background: #0b2c86;
-  color: #fff;
-}
-
-/* COUPLES */
-.couples {
-  margin-top: 40px;
-  display: flex;
-  gap: 20px;
-}
-
-.couple-card {
-  width: 200px;
-  height: 240px;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0,0,0,.15);
-}
-
-.couple-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.couple-card span {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background: rgba(0,0,0,.6);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-.logo-img {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-}
-
-.sidebar-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #d0d8e6;
-}
-
-.sidebar-bottom{
+.sidebar{
+  width:300px;
+  background:#f4f5f6;
+  padding:32px 36px 30px;
   display:flex;
   flex-direction:column;
+  justify-content:space-between;
+}
+
+.logo{
+  display:flex;
+  justify-content:center;
+  margin-bottom:34px;
+}
+
+.logo-img{
+  width:126px;
+  height:auto;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:34px;
+}
+
+.nav a{
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.nav a svg{
+  width:30px;
+  height:30px;
+  stroke:#81858d;
+  stroke-width:1.9;
+  fill:none;
+}
+
+.nav-text{
+  color:#2d3138;
+  font-size:16px;
+  line-height:22px;
+  font-weight:500;
+  letter-spacing:-0.18px;
+}
+
+.nav a.active .nav-text{
+  color:#0f1114;
+  font-weight:600;
+}
+
+.nav a.active svg{
+  stroke:#0f1114;
+}
+
+.profile{
+  display:flex;
+  align-items:center;
   gap:12px;
+  text-decoration:none;
+  color:#2d3138;
 }
 
-.logout-link{
-  margin-top:10px;
-  padding:10px;
-  border-radius:12px;
-  background:#ffe3e3;
-  color:#b30000;
-  text-decoration:none;
-  font-weight:600;
+.profile img,
+.sidebar-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.sidebar-avatar{
+  background:#d4d9e1;
+}
+
+.profile-name{
+  font-size:16px;
+  line-height:22px;
+  font-weight:500;
+  letter-spacing:-0.18px;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+
+.main-card{
+  background:#fff;
+  width:460px;
+  padding:48px 40px;
+  border-radius:28px;
+  box-shadow:0 30px 80px rgba(0,0,0,.15);
   text-align:center;
 }
 
-.login-link, .register-link{
-  padding:10px;
-  border-radius:12px;
-  background:#132c74;
-  color:white;
-  text-decoration:none;
-  text-align:center;
-  font-weight:600;
+.main-card h1{
+  font-size:32px;
+  margin-bottom:12px;
+  color:#111;
 }
 
+.main-card p{
+  font-size:15px;
+  color:#555;
+  margin-bottom:28px;
+}
+
+.start-btn{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  background:#0b2c86;
+  color:#fff;
+}
+
+.couples{
+  margin-top:40px;
+  display:flex;
+  gap:20px;
+}
+
+.couple-card{
+  width:200px;
+  height:240px;
+  border-radius:20px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+
+.couple-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.couple-card span{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  background:rgba(0,0,0,.6);
+  color:#fff;
+  padding:5px 10px;
+  border-radius:8px;
+  font-size:13px;
+}
 </style>
 </head>
-
 <body>
-
-<!-- SIDEBAR -->
 <div class="sidebar">
   <div>
-  <div class="logo">
-    <img src="/images/logo.png" alt="SoulLink" class="logo-img">
-  </div>
+    <div class="logo">
+      <img src="/images/logo.png" alt="SoulLink" class="logo-img">
+    </div>
 
     <div class="nav">
-
-      <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
-        🏠 Знайомства
+      <a class="active" href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>
+        <span class="nav-text">Знайомства</span>
       </a>
-
-      <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
-        🔗 Симпатії
+        <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 1 0-7l1.5-1.5a5 5 0 0 1 7 7L17 13"/>
+          <path d="M14 11a5 5 0 0 1 0 7L12.5 19.5a5 5 0 1 1-7-7L7 11"/>
+          <path d="M8 12h8"/>
+        </svg>
+        <span class="nav-text">Симпатії</span>
       </a>
-
       <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
-        🤍 Лайки
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.2-4.2-9.5-8.2C.7 9.8 2 5.7 6.2 5.1c2.3-.3 4.2.7 5.8 2.8 1.6-2.1 3.5-3.1 5.8-2.8 4.2.6 5.5 4.7 3.7 7.7C19.2 16.8 12 21 12 21z"/></svg>
+        <span class="nav-text">Лайки</span>
       </a>
-
     </div>
+  </div>
+
+  <a href="/profile/" class="profile">
+    {% if user and user.photo %}
+      <img src="{{ user.photo.url }}" alt="Profile photo">
+    {% else %}
+      <div class="sidebar-avatar"></div>
+    {% endif %}
+    <span class="profile-name">{{ user.name|default:"Профіль" }}</span>
+  </a>
 </div>
 
-<a href="/profile/" class="profile">
-  {% if user and user.photo %}
-    <img src="{{ user.photo.url }}" alt="Profile photo">
-  {% else %}
-    <div class="sidebar-avatar"></div>
-  {% endif %}
-  <span>{{ user.name|default:"Профіль" }}</span>
-</a>
-</div>
-
-<!-- MAIN CONTENT -->
 <div class="main">
-
   <div class="main-card">
-    <h1>Знайди свою людину ❤️</h1>
+    <h1>Знайди свою людину</h1>
     <p>Знайомства нового покоління. Реальні люди, справжні емоції.</p>
-    <button class="start-btn" onclick="location.href='/register/'">
-      Розпочати
-    </button>
+    <button class="start-btn" onclick="location.href='/register/'">Розпочати</button>
   </div>
 
   <div class="couples">
     <div class="couple-card">
-      <img src="https://images.unsplash.com/photo-1627964464837-6328f5931576?w=500&auto=format&fit=crop&q=60">
+      <img src="https://images.unsplash.com/photo-1627964464837-6328f5931576?w=500&auto=format&fit=crop&q=60" alt="">
       <span>Анна & Макс</span>
     </div>
-
     <div class="couple-card">
-      <img src="https://images.unsplash.com/photo-1591969851586-adbbd4accf81?w=500&auto=format&fit=crop&q=60">
+      <img src="https://images.unsplash.com/photo-1591969851586-adbbd4accf81?w=500&auto=format&fit=crop&q=60" alt="">
       <span>Оля & Ігор</span>
     </div>
-
     <div class="couple-card">
-      <img src="https://images.unsplash.com/photo-1624228652376-d4faa602b278?w=500&auto=format&fit=crop&q=60">
+      <img src="https://images.unsplash.com/photo-1624228652376-d4faa602b278?w=500&auto=format&fit=crop&q=60" alt="">
       <span>Марія & Андрій</span>
     </div>
   </div>
-
 </div>
-
 </body>
 </html>

@@ -5,10 +5,10 @@
 <title>Редагувати профіль</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
 
 body {
   margin: 0;
@@ -415,57 +415,99 @@ textarea {
 
 /* SIDEBAR */
 .sidebar {
-  width: 240px;
-  background: #f2f4f7;
-  padding: 30px 20px;
+  width: 300px;
+  background: #f4f5f6;
+  padding: 32px 36px 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .logo {
-  text-align: center;
-  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 34px;
 }
 
-.logo h2 {
-  margin: 6px 0 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #111;
+.logo-img {
+  width: 126px;
+  height: auto;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 34px;
 }
 
 .nav a {
   text-decoration: none;
-  color: #333;
-  font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
+  font-size: 0;
+}
+
+.nav a svg {
+  width: 30px;
+  height: 30px;
+  stroke: #81858d;
+  stroke-width: 1.9;
+  fill: none;
+}
+
+.nav-text {
+  color: #2d3138;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+  letter-spacing: -0.18px;
+}
+
+.nav a.active .nav-text {
+  color: #0f1114;
+  font-weight: 600;
+}
+
+.nav a.active svg {
+  stroke: #0f1114;
 }
 
 .profile {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  color: #333;
+  color: #2d3138;
 }
 
 .profile img {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
 
+.sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #d4d9e1;
+}
 
+.profile-name {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+  letter-spacing: -0.18px;
+}
+
+.profile span {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+  letter-spacing: -0.18px;
+}
 
 
 </style>
@@ -483,14 +525,24 @@ textarea {
     <div class="nav">
 
       <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>
+        <span class="nav-text">Знайомства</span>
         🏠 Знайомства
       </a>
 
       <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 1 0-7l1.5-1.5a5 5 0 0 1 7 7L17 13"/>
+          <path d="M14 11a5 5 0 0 1 0 7L12.5 19.5a5 5 0 1 1-7-7L7 11"/>
+          <path d="M8 12h8"/>
+        </svg>
+        <span class="nav-text">Симпатії</span>
         🔗 Симпатії
       </a>
 
       <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.2-4.2-9.5-8.2C.7 9.8 2 5.7 6.2 5.1c2.3-.3 4.2.7 5.8 2.8 1.6-2.1 3.5-3.1 5.8-2.8 4.2.6 5.5 4.7 3.7 7.7C19.2 16.8 12 21 12 21z"/></svg>
+        <span class="nav-text">Лайки</span>
         🤍 Лайки
       </a>
 

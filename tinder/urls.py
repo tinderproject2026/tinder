@@ -26,6 +26,8 @@ urlpatterns = [
     path("dislike/<int:user_id>/", views.dislike_user, name="dislike"),
     path("likes/", views.likes, name="likes"),
     path("sympathy/", views.sympathy, name="sympathy"),
+    path("messages/", views.chat, name="chat"),
+    path("messages/<int:partner_id>/", views.chat, name="chat_with_partner"),
 
 ]
 
