@@ -684,8 +684,8 @@ textarea {
     </nav>
   </div>
   <a class="mini-user" href="/profile/" aria-label="Профіль">
-    {% if user and user.photo %}
-      <img src="{{ user.photo.url }}" alt="{{ user.name }}">
+    {% if user and user.photo_url %}
+      <img src="{{ user.photo_url }}" alt="{{ user.name }}">
     {% else %}
       <div class="mini-avatar"></div>
     {% endif %}
@@ -718,8 +718,8 @@ textarea {
 <!-- PHOTO -->
 <div class="photo-block">
 
-  {% if user.photo %}
-    <img id="photoPreview" src="{{ user.photo.url }}">
+  {% if user.photo_url %}
+    <img id="photoPreview" src="{{ user.photo_url }}">
   {% else %}
     <div id="photoPreview" class="photo-placeholder">+</div>
   {% endif %}

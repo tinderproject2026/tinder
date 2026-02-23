@@ -496,8 +496,8 @@ body{
     </div>
 
     <a href="/profile/" class="profile">
-      {% if current_user and current_user.photo %}
-        <img src="{{ current_user.photo.url }}" alt="{{ current_user.name }}">
+      {% if current_user and current_user.photo_url %}
+        <img src="{{ current_user.photo_url }}" alt="{{ current_user.name }}">
       {% else %}
         <div class="sidebar-avatar"></div>
       {% endif %}
@@ -513,8 +513,8 @@ body{
     <div class="center-wrap">
       {% if profile %}
         <article class="card" id="card" data-id="{{ profile.id }}">
-          {% if profile.photo %}
-            <img class="card-photo" src="{{ profile.photo.url }}" alt="{{ profile.name }}">
+          {% if profile.photo_url %}
+            <img class="card-photo" src="{{ profile.photo_url }}" alt="{{ profile.name }}">
           {% endif %}
 
           <div class="story-bar"></div>

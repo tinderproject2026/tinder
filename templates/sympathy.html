@@ -118,7 +118,7 @@ body{background:var(--page-bg);color:var(--text)}
       </nav>
     </div>
     <a href="/profile/" class="profile">
-      {% if current_user and current_user.photo %}<img src="{{ current_user.photo.url }}" alt="{{ current_user.name }}">{% else %}<div class="sidebar-avatar"></div>{% endif %}
+      {% if current_user and current_user.photo_url %}<img src="{{ current_user.photo_url }}" alt="{{ current_user.name }}">{% else %}<div class="sidebar-avatar"></div>{% endif %}
       <span class="profile-name">Профіль</span>
     </a>
   </aside>
@@ -138,8 +138,8 @@ body{background:var(--page-bg);color:var(--text)}
       <section class="grid">
         {% for item in sympathy_cards %}
           <a class="card-link" href="/messages/{{ item.profile.id }}/"><article class="card">
-            {% if item.profile.photo %}
-              <img src="{{ item.profile.photo.url }}" alt="{{ item.profile.name }}">
+            {% if item.profile.photo_url %}
+              <img src="{{ item.profile.photo_url }}" alt="{{ item.profile.name }}">
             {% else %}
               <img src="/images/no-image.png" alt="No image">
             {% endif %}
@@ -158,7 +158,7 @@ body{background:var(--page-bg);color:var(--text)}
       <section class="grid">
         {% for p in profiles %}
           <a class="card-link" href="/messages/{{ p.id }}/"><article class="card">
-            {% if p.photo %}<img src="{{ p.photo.url }}" alt="{{ p.name }}">{% else %}<img src="/images/no-image.png" alt="No image">{% endif %}
+            {% if p.photo_url %}<img src="{{ p.photo_url }}" alt="{{ p.name }}">{% else %}<img src="/images/no-image.png" alt="No image">{% endif %}
             <div class="info">
               <div class="name-row">
                 <span class="name">{{ p.name }}</span>

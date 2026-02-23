@@ -257,7 +257,7 @@ body{background:var(--bg);color:var(--text)}
       </nav>
     </div>
     <a class="mini-user" href="/profile/" aria-label="Профіль">
-      {% if current_user and current_user.photo %}<img src="{{ current_user.photo.url }}" alt="{{ current_user.name }}">{% else %}<div class="mini-avatar"></div>{% endif %}
+      {% if current_user and current_user.photo_url %}<img src="{{ current_user.photo_url }}" alt="{{ current_user.name }}">{% else %}<div class="mini-avatar"></div>{% endif %}
     </a>
   </aside>
 
@@ -266,7 +266,7 @@ body{background:var(--bg);color:var(--text)}
     <div class="list-scroll">
       {% for convo in conversations %}
         <a class="item {% if active_partner and active_partner.id == convo.partner.id %}active{% endif %}" href="/messages/{{ convo.partner.id }}/">
-          {% if convo.partner.photo %}<img class="item-avatar" src="{{ convo.partner.photo.url }}" alt="{{ convo.partner.name }}">{% else %}<div class="mini-avatar item-avatar"></div>{% endif %}
+          {% if convo.partner.photo_url %}<img class="item-avatar" src="{{ convo.partner.photo_url }}" alt="{{ convo.partner.name }}">{% else %}<div class="mini-avatar item-avatar"></div>{% endif %}
           <div class="item-main">
             <div class="item-name">{{ convo.partner.name }}</div>
             <div class="item-sub">{% if convo.last_message %}{{ convo.last_message.text }}{% else %}Сьогодні{% endif %}</div>
@@ -286,7 +286,7 @@ body{background:var(--bg);color:var(--text)}
     {% if active_partner %}
       <header class="chat-head">
         <div class="chat-head-left">
-          {% if active_partner.photo %}<img class="chat-head-avatar" src="{{ active_partner.photo.url }}" alt="{{ active_partner.name }}">{% else %}<div class="mini-avatar chat-head-avatar"></div>{% endif %}
+          {% if active_partner.photo_url %}<img class="chat-head-avatar" src="{{ active_partner.photo_url }}" alt="{{ active_partner.name }}">{% else %}<div class="mini-avatar chat-head-avatar"></div>{% endif %}
           <div class="chat-head-name">{{ active_partner.name }}</div>
         </div>
         <img class="info-icon" src="/images/icons/mdi-light_information.svg" alt="">

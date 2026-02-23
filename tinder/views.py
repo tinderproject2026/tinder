@@ -323,7 +323,7 @@ def register(request):
 
             photo = request.FILES.get('photo')
             if photo:
-                profile.photo = photo
+                profile.set_photo_file(photo)
                 profile.save()
 
         # КРОК 3 (про себе)
@@ -391,7 +391,7 @@ def profile(request):
             user.birth_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
         if request.FILES.get('photo'):
-            user.photo = request.FILES.get('photo')
+            user.set_photo_file(request.FILES.get('photo'))
 
         user.save()
         return redirect('/profile/')
