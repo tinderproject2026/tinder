@@ -197,8 +197,8 @@ body{
   </div>
 
   <a href="/profile/" class="profile">
-    {% if user and user.photo %}
-      <img src="{{ user.photo.url }}" alt="Profile photo">
+    {% if user and user.photo_url %}
+      <img src="{{ user.photo_url }}" alt="Profile photo">
     {% else %}
       <div class="sidebar-avatar"></div>
     {% endif %}
