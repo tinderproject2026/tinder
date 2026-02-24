@@ -45,7 +45,9 @@ class Match(models.Model):
 class ChatMessage(models.Model):
     sender = models.ForeignKey(Profile, related_name="sent_messages", on_delete=models.CASCADE)
     receiver = models.ForeignKey(Profile, related_name="received_messages", on_delete=models.CASCADE)
-    text = models.TextField()
+    text = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='chat/images/', blank=True, null=True)
+    video = models.FileField(upload_to='chat/videos/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

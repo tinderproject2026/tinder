@@ -191,8 +191,17 @@ def chat(request, partner_id=None):
 
     if request.method == "POST" and active_partner:
         text = request.POST.get("text", "").strip()
-        if text:
-            ChatMessage.objects.create(sender=me, receiver=active_partner, text=text)
+        image = request.FILES.get("image")
+        video = request.FILES.get("video")
+        
+        if text or image or video:
+            ChatMessage.objects.create(
+                sender=me, 
+                receiver=active_partner, 
+                text=text,
+                image=image,
+                video=video
+            )
         return redirect(f"/messages/{active_partner.id}/")
 
     thread_messages = []
@@ -412,3 +421,32 @@ def profile(request):
 def logout(request):
     request.session.pop('user_id', None)
     return redirect('home')
+
+
+def delete_message(request, message_id):
+    if not request.session.get('user_id'):
+        return redirect('auth')
+    
+    me = Profile.objects.get(id=request.session['user_id'])
+    
+    try:
+        message = ChatMessage.objects.get(id=message_id, sender=me)
+        
+        if message.image:
+            if message.image.path:
+                import os
+                if os.path.exists(message.image.path):
+                    os.remove(message.image.path)
+        
+        if message.video:
+            if message.video.path:
+                import os
+                if os.path.exists(message.video.path):
+                    os.remove(message.video.path)
+        
+        partner_id = message.receiver_id if message.sender_id == me.id else message.sender_id
+        message.delete()
+        
+        return redirect(f'/messages/{partner_id}/')
+    except ChatMessage.DoesNotExist:
+        return redirect('chat')

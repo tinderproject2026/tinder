@@ -157,6 +157,19 @@ body{background:var(--bg);color:var(--text)}
   width:21px;height:21px;
   object-fit:contain;
 }
+.delete-btn{
+  color:#333;
+  text-decoration:none;
+  font-size:14px;
+  padding:2px 6px;
+  border-radius:4px;
+  opacity:0.6;
+  transition:opacity 0.2s;
+}
+.delete-btn:hover{
+  opacity:1;
+  background:rgba(0,0,0,0.1);
+}
 
 .empty-chat{
   flex:1;
@@ -296,10 +309,21 @@ body{background:var(--bg);color:var(--text)}
         <div class="day-label">Сьогодні</div>
         {% for m in thread_messages %}
           <div class="bubble {% if m.sender_id == current_user.id %}mine{% endif %}">
-            <div class="bubble-text">{{ m.text }}</div>
+            {% if m.image %}
+              <img src="{{ m.image.url }}" style="max-width:250px;border-radius:12px;margin-bottom:8px;">
+            {% endif %}
+            {% if m.video %}
+              <div class="video-container" style="position:relative;max-width:250px;margin-bottom:8px;">
+                <video src="{{ m.video.url }}" preload="metadata" style="width:100%;border-radius:12px;cursor:pointer;" onclick="this.paused ? this.play() : this.pause()"></video>
+              </div>
+            {% endif %}
+            {% if m.text %}
+              <div class="bubble-text">{{ m.text }}</div>
+            {% endif %}
             <div class="bubble-meta">
               <span>{{ m.created|date:"H:i" }}</span>
               {% if m.sender_id == current_user.id %}
+                <a href="/delete-message/{{ m.id }}/" class="delete-btn" title="Видалити" onclick="return confirm('Видалити повідомлення?')">✕</a>
                 <img class="bubble-ticks-icon" src="/images/icons/mdi_ticks.svg" alt="">
               {% endif %}
             </div>
@@ -322,14 +346,21 @@ body{background:var(--bg);color:var(--text)}
         </div>
       </div>
 
-      <form class="input-form" method="POST" {% if not active_partner %}action=""{% endif %}>
+      <form class="input-form" method="POST" enctype="multipart/form-data" action="/messages/{% if active_partner %}{{ active_partner.id }}/{% endif %}">
         {% csrf_token %}
-        <img class="input-icon" src="/images/icons/mynaui_paperclip.svg" alt="">
+        <label for="fileInput" style="cursor:pointer;display:flex;align-items:center;">
+          <img class="input-icon" src="/images/icons/mynaui_paperclip.svg" alt="Прикріпити">
+        </label>
+        <input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
+        <input type="file" id="imageInput" name="image" accept="image/*" style="display:none">
+        <input type="file" id="videoInput" name="video" accept="video/*" style="display:none">
         <input class="input" id="chatInput" type="text" name="text" placeholder="Повідомлення..." autocomplete="off" {% if not active_partner %}disabled{% endif %}>
         <button class="emoji-btn" id="emojiToggle" type="button" aria-label="Додати емодзі" {% if not active_partner %}disabled{% endif %}>
           <img class="input-icon" src="/images/icons/iconoir_emoji.svg" alt="">
         </button>
-        <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="">
+        <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;">
+          <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="Відправити">
+        </button>
       </form>
     </div>
   </section>
@@ -339,6 +370,33 @@ const input = document.getElementById('chatInput');
 const emojiToggle = document.getElementById('emojiToggle');
 const emojiPicker = document.getElementById('emojiPicker');
 const emojiItems = document.querySelectorAll('.emoji-item');
+const fileInput = document.getElementById('fileInput');
+const imageInput = document.getElementById('imageInput');
+const videoInput = document.getElementById('videoInput');
+const chatForm = document.querySelector('.input-form');
+
+if (fileInput && chatForm) {
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files.length > 0) {
+      const file = this.files[0];
+      const fileType = file.type.startsWith('video/') ? 'video' : 'image';
+      
+      if (fileType === 'video') {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        videoInput.files = dataTransfer.files;
+        imageInput.value = '';
+      } else {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        imageInput.files = dataTransfer.files;
+        videoInput.value = '';
+      }
+      
+      chatForm.submit();
+    }
+  });
+}
 
 if (input && emojiToggle && emojiPicker) {
   emojiToggle.addEventListener('click', (e) => {
@@ -363,6 +421,15 @@ if (input && emojiToggle && emojiPicker) {
     if (!emojiPicker.contains(e.target) && !emojiToggle.contains(e.target)) {
       emojiPicker.classList.remove('open');
       emojiPicker.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
+if (fileInput && chatForm) {
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files.length > 0) {
+      console.log('Файл обраний:', this.files[0].name);
+      chatForm.submit();
     }
   });
 }
