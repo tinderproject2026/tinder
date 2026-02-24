@@ -33,7 +33,6 @@ class Profile(models.Model):
         if not uploaded_file:
             return
 
-        self.photo = uploaded_file
         raw = uploaded_file.read()
         try:
             uploaded_file.seek(0)
@@ -47,6 +46,8 @@ class Profile(models.Model):
         )
         encoded = base64.b64encode(raw).decode("ascii")
         self.photo_data = f"data:{mime_type};base64,{encoded}"
+        # Keep DB as the source of truth for profile photos.
+        self.photo = None
 
     @property
     def photo_url(self):
