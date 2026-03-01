@@ -534,7 +534,7 @@ body{
               </span>
             </div>
 
-            <div class="bio">{{ profile.bio|default:"" }}</div>
+            <div class="bio">{{ profile.bio|default_if_none:"Шукаю нові знайомства"|default:"Шукаю нові знайомства" }}</div>
 
             <div class="actions">
               <button class="btn dislike" type="button" onclick="sendAction('dislike')" aria-label="Відхилити">
@@ -556,10 +556,7 @@ body{
   </main>
 </div>
 
-<a href="/messages/" class="chat-fab" aria-label="Повідомлення">
-  <img class="chat-fab-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt="">
-  <span class="chat-fab-text">Повідомлення</span>
-</a>
+{% include "includes/quick_chat_widget.html" %}
 
 <script>
 function getCookie(name){
@@ -595,3 +592,4 @@ function sendAction(type){
 </script>
 </body>
 </html>
+

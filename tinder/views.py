@@ -32,6 +32,137 @@ def get_opposite_gender_filter(gender_value):
 
     return None
 
+def get_match_partners(user):
+    matches = (
+        Match.objects
+        .filter(Q(user1=user) | Q(user2=user))
+        .select_related("user1", "user2")
+        .order_by("-created")
+    )
+
+    partners = []
+    seen_partner_ids = set()
+    for match in matches:
+        partner = match.user2 if match.user1_id == user.id else match.user1
+        if partner.id in seen_partner_ids:
+            continue
+        seen_partner_ids.add(partner.id)
+        partners.append(partner)
+    return partners
+
+
+def get_message_preview_text(message):
+    if not message:
+        return ""
+    if message.text:
+        return message.text
+    if message.image:
+        return "Фото"
+    if message.video:
+        return "Відео"
+    return ""
+
+
+def get_latest_chat(user, preview_limit=4):
+    partners = get_match_partners(user)
+    if not partners:
+        return None
+
+    partner_ids = [partner.id for partner in partners]
+    latest_message = (
+        ChatMessage.objects
+        .filter(
+            Q(sender=user, receiver_id__in=partner_ids)
+            | Q(sender_id__in=partner_ids, receiver=user)
+        )
+        .select_related("sender", "receiver")
+        .order_by("-created")
+        .first()
+    )
+
+    latest_partner = partners[0]
+    if latest_message:
+        latest_partner = latest_message.receiver if latest_message.sender_id == user.id else latest_message.sender
+
+    thread = (
+        ChatMessage.objects
+        .filter(
+            Q(sender=user, receiver=latest_partner)
+            | Q(sender=latest_partner, receiver=user)
+        )
+        .select_related("sender", "receiver")
+        .order_by("-created")[:preview_limit]
+    )
+
+    preview_messages = []
+    for message in reversed(list(thread)):
+        preview_messages.append({
+            "text": get_message_preview_text(message),
+            "time": timezone.localtime(message.created).strftime("%H:%M"),
+            "is_mine": message.sender_id == user.id,
+        })
+
+    return {
+        "partner": latest_partner,
+        "messages": preview_messages,
+        "chat_url": f"/messages/{latest_partner.id}/",
+    }
+
+
+def serialize_chat_message(message, me):
+    return {
+        "id": message.id,
+        "text": message.text or "",
+        "time": timezone.localtime(message.created).strftime("%H:%M"),
+        "is_mine": message.sender_id == me.id,
+        "image_url": message.image.url if message.image else "",
+        "video_url": message.video.url if message.video else "",
+    }
+
+
+def build_latest_chat_payload(user, message_limit=80):
+    partners = get_match_partners(user)
+    if not partners:
+        return {"exists": False}
+
+    partner_ids = [partner.id for partner in partners]
+    latest_message = (
+        ChatMessage.objects
+        .filter(
+            Q(sender=user, receiver_id__in=partner_ids)
+            | Q(sender_id__in=partner_ids, receiver=user)
+        )
+        .select_related("sender", "receiver")
+        .order_by("-created")
+        .first()
+    )
+
+    partner = partners[0]
+    if latest_message:
+        partner = latest_message.receiver if latest_message.sender_id == user.id else latest_message.sender
+
+    messages_qs = (
+        ChatMessage.objects
+        .filter(
+            Q(sender=user, receiver=partner) | Q(sender=partner, receiver=user)
+        )
+        .select_related("sender", "receiver")
+        .order_by("-created")[:message_limit]
+    )
+    messages = [serialize_chat_message(msg, user) for msg in reversed(list(messages_qs))]
+
+    return {
+        "exists": True,
+        "chat_url": f"/messages/{partner.id}/",
+        "partner": {
+            "id": partner.id,
+            "name": partner.name,
+            "photo_url": partner.photo_url or "",
+        },
+        "messages": messages,
+    }
+
+
 def likes(request):
     if not request.session.get("user_id"):
         return redirect("auth")
@@ -50,22 +181,18 @@ def likes(request):
     ]
 
     return render(request, "likes.html", {
-    "profiles": profiles,
-    "like_cards": like_cards,
-    "current_user": me
-})
+        "profiles": profiles,
+        "like_cards": like_cards,
+        "current_user": me,
+        "latest_chat": get_latest_chat(me),
+    })
 
 def sympathy(request):
     user = get_current_user(request)
+    if not user:
+        return redirect("auth")
 
-    matches = Match.objects.filter(user1=user) | Match.objects.filter(user2=user)
-
-    profiles = []
-    for m in matches:
-        if m.user1 == user:
-            profiles.append(m.user2)
-        else:
-            profiles.append(m.user1)
+    profiles = get_match_partners(user)
 
     sympathy_cards = [
         {"profile": p, "age": calculate_age(p.birth_date)}
@@ -75,7 +202,8 @@ def sympathy(request):
     return render(request, "sympathy.html", {
         "profiles": profiles,
         "sympathy_cards": sympathy_cards,
-        "current_user": user   # ← ВАЖЛИВО
+        "current_user": user,
+        "latest_chat": get_latest_chat(user),
     })
 
 
@@ -122,24 +250,55 @@ def get_current_user(request):
     return Profile.objects.filter(id=user_id).first()
 
 
+def latest_chat_data(request):
+    if not request.session.get("user_id"):
+        return JsonResponse({"error": "unauthorized"}, status=401)
+
+    me = Profile.objects.get(id=request.session["user_id"])
+    return JsonResponse(build_latest_chat_payload(me))
+
+
+def latest_chat_send(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "method_not_allowed"}, status=405)
+
+    if not request.session.get("user_id"):
+        return JsonResponse({"error": "unauthorized"}, status=401)
+
+    me = Profile.objects.get(id=request.session["user_id"])
+    payload = build_latest_chat_payload(me, message_limit=1)
+    if not payload.get("exists"):
+        return JsonResponse({"error": "no_chat"}, status=404)
+
+    partner_id = payload["partner"]["id"]
+    partner = Profile.objects.filter(id=partner_id).first()
+    if not partner:
+        return JsonResponse({"error": "partner_not_found"}, status=404)
+
+    text = request.POST.get("text", "").strip()
+    image = request.FILES.get("image")
+    video = request.FILES.get("video")
+
+    if not text and not image and not video:
+        return JsonResponse({"error": "empty_message"}, status=400)
+
+    ChatMessage.objects.create(
+        sender=me,
+        receiver=partner,
+        text=text,
+        image=image,
+        video=video,
+    )
+    return JsonResponse(build_latest_chat_payload(me))
+
+
 def chat(request, partner_id=None):
     if not request.session.get("user_id"):
         return redirect("auth")
 
     me = Profile.objects.get(id=request.session["user_id"])
 
-    matches = Match.objects.filter(user1=me) | Match.objects.filter(user2=me)
-
-    partners = []
-    seen_partner_ids = set()
-    for m in matches:
-        if m.user1_id == me.id:
-            partner = m.user2
-        else:
-            partner = m.user1
-        if partner.id not in seen_partner_ids:
-            seen_partner_ids.add(partner.id)
-            partners.append(partner)
+    partners = get_match_partners(me)
 
     partner_map = {p.id: p for p in partners}
 
@@ -243,10 +402,11 @@ def dating(request):
     profile = random.choice(list(profiles)) if profiles else None
 
     return render(request, "dating.html", {
-    "profile": profile,
-    "profile_age": calculate_age(profile.birth_date) if profile else None,
-    "current_user": me
-})
+        "profile": profile,
+        "profile_age": calculate_age(profile.birth_date) if profile else None,
+        "current_user": me,
+        "latest_chat": get_latest_chat(me),
+    })
 
 
 def home(request):
@@ -450,3 +610,4 @@ def delete_message(request, message_id):
         return redirect(f'/messages/{partner_id}/')
     except ChatMessage.DoesNotExist:
         return redirect('chat')
+

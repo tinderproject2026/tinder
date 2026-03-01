@@ -28,6 +28,8 @@ urlpatterns = [
     path("sympathy/", views.sympathy, name="sympathy"),
     path("messages/", views.chat, name="chat"),
     path("messages/<int:partner_id>/", views.chat, name="chat_with_partner"),
+    path("api/latest-chat/", views.latest_chat_data, name="latest_chat_data"),
+    path("api/latest-chat/send/", views.latest_chat_send, name="latest_chat_send"),
     path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
 
 ]
