@@ -439,7 +439,7 @@ textarea {
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 34px;
+  gap: 22px;
 }
 
 .nav a {
@@ -448,6 +448,9 @@ textarea {
   align-items: center;
   gap: 16px;
   font-size: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  transition: background-color .16s ease;
 }
 
 .nav a img {
@@ -473,6 +476,9 @@ textarea {
 .nav a.active img {
   opacity: 1;
 }
+.nav a:hover { background: #d9e6f4; }
+.nav a:active { background: #c8dbef; }
+.nav a.active { background: #cfe2f6; }
 
 .profile {
   display: flex;

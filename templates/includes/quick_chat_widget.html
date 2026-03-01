@@ -27,7 +27,7 @@
 .quick-chat-emoji-item{border:none;background:transparent;font-size:18px;line-height:1;padding:5px 0;cursor:pointer;border-radius:8px}
 .quick-chat-emoji-item:hover{background:#edf3fb}
 #quickChatFab{width:330px;max-width:calc(100vw - 68px);justify-content:flex-start;padding:14px 16px;gap:10px;border-radius:22px;box-shadow:0 10px 20px rgba(0,0,0,.14);border:none;background:#f7f8fa}
-#quickChatFab .chat-fab-text{font-size:16px;line-height:20px;font-weight:400;font-family:'Montserrat',sans-serif}
+#quickChatFab .chat-fab-text{font-family:'Montserrat',sans-serif;font-size:20px;line-height:24px;font-weight:400;font-style:normal}
 #quickChatFab:focus,
 #quickChatFab:focus-visible{outline:none}
 .chat-fab-avatars{margin-left:auto;display:flex;align-items:center}
@@ -36,7 +36,7 @@
 @media (max-width:920px){
   .quick-chat{left:12px;right:12px;width:auto;bottom:12px;height:500px}
   #quickChatFab{width:auto;max-width:none;padding:12px 14px;border-radius:18px}
-  #quickChatFab .chat-fab-text{font-size:16px;line-height:20px}
+  #quickChatFab .chat-fab-text{font-size:18px;line-height:22px}
   .chat-fab-avatar{width:28px;height:28px}
 }
 </style>
@@ -52,7 +52,7 @@
 
 <aside class="quick-chat" id="quickChatPanel" aria-hidden="true">
   <header class="quick-chat-header">
-    <a class="quick-chat-head-link" id="quickChatBack" href="/messages/" aria-label="&#1042;&#1110;&#1076;&#1082;&#1088;&#1080;&#1090;&#1080; &#1095;&#1072;&#1090;">&lsaquo;</a>
+    <a class="quick-chat-head-link" id="quickChatBack" href="/messages/" aria-label="&#1042;&#1110;&#1076;&#1082;&#1088;&#1080;&#1090;&#1080; &#1087;&#1088;&#1086;&#1092;&#1110;&#1083;&#1100;">&lsaquo;</a>
     <img class="quick-chat-avatar" id="quickChatAvatar" src="/images/no-image.png" alt="">
     <div class="quick-chat-name" id="quickChatName">&#1063;&#1072;&#1090;</div>
     <a class="quick-chat-head-link" id="quickChatExpand" href="/messages/" aria-label="&#1055;&#1086;&#1074;&#1085;&#1080;&#1081; &#1095;&#1072;&#1090;">&#x2922;</a>
@@ -124,6 +124,17 @@
     return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
   }
 
+  function formatMessageTime(msg){
+    const createdAt = msg && msg.created_at ? msg.created_at : "";
+    if(createdAt){
+      const parsed = new Date(createdAt);
+      if(!Number.isNaN(parsed.getTime())){
+        return parsed.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+      }
+    }
+    return msg && msg.time ? msg.time : "";
+  }
+
   function renderMessages(messages){
     if(!messages || !messages.length){
       body.innerHTML = '<div class="quick-chat-empty">\u041f\u043e\u043a\u0438 \u043d\u0435\u043c\u0430\u0454 \u043f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u044c</div>';
@@ -134,7 +145,7 @@
       const mediaVideo = msg.video_url ? `<video class="quick-bubble-video" src="${escapeHtml(msg.video_url)}" controls preload="metadata"></video>` : "";
       const text = msg.text ? `<div class="quick-bubble-text">${escapeHtml(msg.text)}</div>` : "";
       const ticks = msg.is_mine ? '<img class="quick-bubble-ticks" src="/images/icons/mdi_ticks.svg" alt="sent">' : "";
-      return `<div class="quick-bubble ${msg.is_mine ? "mine" : ""}">${mediaImage}${mediaVideo}${text}<div class="quick-bubble-meta"><span class="quick-bubble-time">${escapeHtml(msg.time || "")}</span>${ticks}</div></div>`;
+      return `<div class="quick-bubble ${msg.is_mine ? "mine" : ""}">${mediaImage}${mediaVideo}${text}<div class="quick-bubble-meta"><span class="quick-bubble-time">${escapeHtml(formatMessageTime(msg))}</span>${ticks}</div></div>`;
     }).join("");
     body.scrollTop = body.scrollHeight;
   }
@@ -152,7 +163,7 @@
     }
     nameEl.textContent = data.partner.name || "\u0427\u0430\u0442";
     avatarEl.src = data.partner.photo_url || "/images/no-image.png";
-    backLink.href = data.chat_url || "/messages/";
+    backLink.href = data.profile_url || data.chat_url || "/messages/";
     expandLink.href = data.chat_url || "/messages/";
     input.disabled = false;
     fileInput.disabled = false;

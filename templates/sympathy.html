@@ -21,12 +21,15 @@ body{background:var(--page-bg);color:var(--text)}
 .sidebar{background:var(--sidebar-bg);border-right:1px solid #dde2ea;padding:42px 44px 34px;display:flex;flex-direction:column;justify-content:space-between}
 .logo{display:flex;justify-content:center;margin-bottom:40px}
 .logo-img{width:130px;height:auto}
-.nav{display:flex;flex-direction:column;gap:38px}
-.nav a{text-decoration:none;display:flex;align-items:center;gap:18px}
+.nav{display:flex;flex-direction:column;gap:22px}
+.nav a{text-decoration:none;display:flex;align-items:center;gap:18px;padding:8px 10px;border-radius:12px;transition:background-color .16s ease}
 .nav a img{width:32px;height:32px;object-fit:contain;opacity:.72}
 .nav-text{color:#4a515c;font-size:19px;line-height:24px;font-weight:500;letter-spacing:-0.18px}
 .nav a.active .nav-text{color:#0f1114;font-weight:600}
 .nav a.active img{opacity:1}
+.nav a:hover{background:#d9e6f4}
+.nav a:active{background:#c8dbef}
+.nav a.active{background:#cfe2f6}
 .profile{display:flex;align-items:center;gap:12px;text-decoration:none;color:#2d3138}
 .profile img,.sidebar-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover}
 .sidebar-avatar{background:#d4d9e1}

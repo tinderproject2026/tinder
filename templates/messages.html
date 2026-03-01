@@ -120,6 +120,7 @@ body{background:var(--bg);color:var(--text)}
 .chat-head-left{display:flex;align-items:center;gap:14px}
 .chat-head-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
 .chat-head-name{font-size:26px;line-height:32px;font-weight:500}
+.info-link{display:flex;align-items:center;justify-content:center;text-decoration:none}
 .info-icon{width:38px;height:38px;object-fit:contain}
 
 .chat-body{
@@ -302,7 +303,9 @@ body{background:var(--bg);color:var(--text)}
           {% if active_partner.photo_url %}<img class="chat-head-avatar" src="{{ active_partner.photo_url }}" alt="{{ active_partner.name }}">{% else %}<div class="mini-avatar chat-head-avatar"></div>{% endif %}
           <div class="chat-head-name">{{ active_partner.name }}</div>
         </div>
-        <img class="info-icon" src="/images/icons/mdi-light_information.svg" alt="">
+        <a class="info-link" href="/messages/profile/{{ active_partner.id }}/" aria-label="Профіль співрозмовника">
+          <img class="info-icon" src="/images/icons/mdi-light_information.svg" alt="">
+        </a>
       </header>
 
       <div class="chat-body">

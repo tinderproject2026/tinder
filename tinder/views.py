@@ -15,6 +15,38 @@ def calculate_age(birth_date):
     today = date.today()
     return today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
+
+def calculate_zodiac_sign(birth_date):
+    if not birth_date:
+        return None
+
+    month = birth_date.month
+    day = birth_date.day
+
+    if (month == 3 and day >= 21) or (month == 4 and day <= 19):
+        return "Овен"
+    if (month == 4 and day >= 20) or (month == 5 and day <= 20):
+        return "Телець"
+    if (month == 5 and day >= 21) or (month == 6 and day <= 20):
+        return "Близнюки"
+    if (month == 6 and day >= 21) or (month == 7 and day <= 22):
+        return "Рак"
+    if (month == 7 and day >= 23) or (month == 8 and day <= 22):
+        return "Лев"
+    if (month == 8 and day >= 23) or (month == 9 and day <= 22):
+        return "Діва"
+    if (month == 9 and day >= 23) or (month == 10 and day <= 22):
+        return "Терези"
+    if (month == 10 and day >= 23) or (month == 11 and day <= 21):
+        return "Скорпіон"
+    if (month == 11 and day >= 22) or (month == 12 and day <= 21):
+        return "Стрілець"
+    if (month == 12 and day >= 22) or (month == 1 and day <= 19):
+        return "Козоріг"
+    if (month == 1 and day >= 20) or (month == 2 and day <= 18):
+        return "Водолій"
+    return "Риби"
+
 def get_opposite_gender_filter(gender_value):
     if not gender_value:
         return None
@@ -99,6 +131,7 @@ def get_latest_chat(user, preview_limit=4):
         preview_messages.append({
             "text": get_message_preview_text(message),
             "time": timezone.localtime(message.created).strftime("%H:%M"),
+            "created_at": message.created.isoformat(),
             "is_mine": message.sender_id == user.id,
         })
 
@@ -114,6 +147,7 @@ def serialize_chat_message(message, me):
         "id": message.id,
         "text": message.text or "",
         "time": timezone.localtime(message.created).strftime("%H:%M"),
+        "created_at": message.created.isoformat(),
         "is_mine": message.sender_id == me.id,
         "image_url": message.image.url if message.image else "",
         "video_url": message.video.url if message.video else "",
@@ -154,6 +188,7 @@ def build_latest_chat_payload(user, message_limit=80):
     return {
         "exists": True,
         "chat_url": f"/messages/{partner.id}/",
+        "profile_url": f"/messages/profile/{partner.id}/",
         "partner": {
             "id": partner.id,
             "name": partner.name,
@@ -374,6 +409,30 @@ def chat(request, partner_id=None):
         "conversations": conversations,
         "active_partner": active_partner,
         "thread_messages": thread_messages,
+    })
+
+
+def chat_partner_profile(request, partner_id):
+    if not request.session.get("user_id"):
+        return redirect("auth")
+
+    me = Profile.objects.get(id=request.session["user_id"])
+    partners = get_match_partners(me)
+    partner_map = {p.id: p for p in partners}
+    partner = partner_map.get(partner_id)
+    if not partner:
+        return redirect("chat")
+
+    interests = []
+    if partner.interests:
+        interests = [item.strip() for item in partner.interests.split(",") if item.strip()]
+
+    return render(request, "chat_partner_profile.html", {
+        "current_user": me,
+        "partner": partner,
+        "partner_age": calculate_age(partner.birth_date),
+        "partner_zodiac_sign": calculate_zodiac_sign(partner.birth_date),
+        "partner_interests": interests,
     })
 
 

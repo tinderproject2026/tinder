@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профіль</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#DFEEFE;
+  --sidebar-bg:#f4f5f6;
+  --surface:#f6f6f6;
+  --line:#dce2ea;
+  --text:#0f1114;
+  --muted:#5a6472;
+  --blue-panel:#D0E6FD;
+  --white-card:#f7f9fc;
+  --accent:#13266e;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
+body{background:var(--bg);color:var(--text)}
+
+.layout{min-height:100vh;display:grid;grid-template-columns:336px 1fr}
+
+.sidebar{
+  background:var(--sidebar-bg);
+  border-right:1px solid #dde2ea;
+  padding:42px 44px 34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.logo{display:flex;justify-content:center;margin-bottom:40px}
+.logo-img{width:130px;height:auto}
+.nav{display:flex;flex-direction:column;gap:22px}
+.nav a{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:background-color .16s ease;
+}
+.nav a img{width:32px;height:32px;object-fit:contain;opacity:.72}
+.nav-text{color:#3f4855;font-size:19px;line-height:24px;font-weight:500}
+.nav a.active .nav-text{color:#0f1114;font-weight:600}
+.nav a.active img{opacity:1}
+.nav a:hover{background:#d9e6f4}
+.nav a:active{background:#c8dbef}
+.nav a.active{background:#cfe2f6}
+.profile{display:flex;align-items:center;gap:12px;text-decoration:none;color:#2d3138}
+.profile img,.sidebar-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover}
+.sidebar-avatar{background:#d4d9e1}
+.profile-name{font-size:19px;line-height:24px;font-weight:500}
+
+.main{display:flex;flex-direction:column;min-width:0}
+.top{
+  background:var(--surface);
+  border-bottom:1px solid #cfd8e3;
+  padding:20px 28px 18px 48px;
+}
+.top-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+.top-left{display:flex;align-items:center;gap:28px}
+.back{
+  text-decoration:none;
+  color:#0f1114;
+  font-size:52px;
+  line-height:1;
+  font-weight:400;
+}
+.title{font-size:34px;line-height:40px;font-weight:600}
+
+.identity{display:grid;grid-template-columns:132px 1fr;gap:42px;align-items:center}
+.avatar{width:132px;height:132px;border-radius:50%;object-fit:cover;border:2px solid #101114;background:#d7dce4}
+.avatar-placeholder{width:132px;height:132px;border-radius:50%;border:2px solid #101114;background:#d7dce4}
+.name-row{display:flex;align-items:center;gap:16px}
+.name-age{font-size:30px;line-height:36px;font-weight:400}
+.status{
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+}
+.status img{
+  width:30px;height:30px;object-fit:contain;
+}
+.chat-btn{
+  margin-top:10px;display:inline-flex;align-items:center;gap:10px;
+  text-decoration:none;background:var(--accent);color:#fff;
+  border-radius:10px;padding:10px 18px;font-size:17px;line-height:22px;font-weight:400;
+}
+.chat-btn-icon{
+  width:18px;height:18px;object-fit:contain;filter:brightness(0) invert(1);
+}
+
+.content{
+  background:var(--blue-panel);
+  padding:24px 30px 26px 48px;
+  flex:1;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+  align-items:start;
+}
+.section-title{font-size:30px;line-height:36px;font-weight:600;margin-bottom:12px}
+.about{
+  font-family:'Montserrat',sans-serif;
+  font-style:normal;
+  font-weight:500;
+  font-size:18px;
+  line-height:26px;
+  max-width:620px;
+  margin-bottom:20px;
+  color:#1e2733;
+}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.chip{
+  font-family:'Montserrat',sans-serif;
+  font-style:normal;
+  font-weight:500;
+  background:var(--white-card);
+  border:1px solid #d6deea;
+  border-radius:10px;
+  padding:8px 16px;
+  font-size:16px;line-height:22px;
+}
+
+.details-title{font-size:30px;line-height:36px;font-weight:600;margin-bottom:20px}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}
+.detail{
+  background:transparent;
+  border:none;
+  border-radius:0;
+  padding:0;
+}
+.label{
+  font-family:'Montserrat',sans-serif;
+  font-style:normal;
+  font-weight:500;
+  font-size:17px;
+  line-height:22px;
+  color:#11161e;
+  margin-bottom:6px;
+  padding-left:22px;
+}
+.value{
+  font-family:'Montserrat',sans-serif;
+  font-style:normal;
+  font-weight:500;
+  font-size:17px;
+  line-height:24px;
+  color:#11161e;
+  background:#f7f8fa;
+  border:1px solid #dbe3ee;
+  border-radius:9px;
+  padding:8px 12px 8px 22px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  width:56%;
+}
+
+.photo-panel{}
+.photo-head{display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.photo-title{font-size:28px;line-height:34px;font-weight:600}
+.photo-more{font-family:'Montserrat',sans-serif;font-style:normal;font-weight:400;font-size:14px;line-height:20px;color:#202630}
+.photo{
+  width:100%;
+  max-width:410px;
+  height:560px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#d7dce4;
+}
+
+@media (max-width:1700px){
+  .layout{grid-template-columns:336px 1fr}
+  .title,.name-age,.section-title,.details-title,.photo-title{font-size:30px;line-height:36px}
+  .about{font-size:17px;line-height:24px}
+  .label{font-size:15px;line-height:20px;padding-left:18px}
+  .value{font-size:15px;line-height:22px;min-height:38px;padding:7px 10px 7px 18px;width:60%}
+  .chat-btn{font-size:16px;line-height:22px}
+  .chip,.photo-more{font-size:16px;line-height:22px}
+  .grid{grid-template-columns:1fr 320px}
+  .photo{max-width:340px;height:492px}
+}
+@media (max-width:1220px){
+  .layout{grid-template-columns:100px 1fr}
+  .sidebar{padding:22px 16px}
+  .logo{margin-bottom:18px}
+  .logo-img{width:54px}
+  .nav{gap:22px;align-items:center}
+  .nav-text,.profile-name{display:none}
+  .profile{justify-content:center}
+  .top{padding:18px 20px 18px 28px}
+  .content{padding:18px 18px 18px 28px}
+  .grid{grid-template-columns:1fr}
+  .photo{max-width:340px;height:490px}
+}
+@media (max-width:820px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{
+    display:block;
+    border-bottom:1px solid rgba(0,0,0,.06);
+    padding:14px;
+  }
+  .logo{margin-bottom:12px}
+  .logo-img{width:86px}
+  .nav{
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .nav a{
+    background:#fff;
+    border-radius:12px;
+    padding:8px 12px;
+  }
+  .nav a img{width:20px;height:20px}
+  .nav-text{
+    display:inline;
+    font-size:14px;
+    line-height:20px;
+    font-weight:600;
+  }
+  .profile{justify-content:center}
+  .profile-name{
+    display:inline;
+    font-size:14px;
+    line-height:20px;
+  }
+  .top{padding:14px 12px 14px 24px}
+  .content{padding:12px 12px 12px 24px}
+  .title,.section-title,.details-title,.photo-title{font-size:28px;line-height:34px}
+  .name-age{font-size:28px;line-height:34px}
+  .about{font-size:16px;line-height:23px}
+  .identity{grid-template-columns:90px 1fr;gap:14px}
+  .avatar,.avatar-placeholder{width:90px;height:90px;border-width:2px}
+  .back{font-size:34px}
+  .chat-btn{font-size:18px;line-height:24px;padding:10px 14px}
+  .chat-btn-icon{width:18px;height:18px}
+  .chip{font-size:14px;line-height:20px}
+  .label{font-size:14px;line-height:19px;padding-left:14px}
+  .value{font-size:14px;line-height:20px;min-height:36px;padding:7px 10px 7px 14px;width:70%}
+  .photo-more{font-size:18px;line-height:24px}
+  .photo{height:auto;aspect-ratio:3/4}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="logo"><img src="/images/logo.png" alt="SoulLink" class="logo-img"></div>
+      <nav class="nav">
+        <a href="/dating/">
+          <img src="/images/icons/codicon_home.svg" alt="">
+          <span class="nav-text">Знайомства</span>
+        </a>
+        <a href="/sympathy/">
+          <img src="/images/icons/system-uicons_chain.svg" alt="">
+          <span class="nav-text">Симпатії</span>
+        </a>
+        <a href="/likes/">
+          <img src="/images/icons/solar_heart-linear.svg" alt="">
+          <span class="nav-text">Лайки</span>
+        </a>
+        <a class="active" href="/messages/">
+          <img src="/images/icons/ph_paper-plane-tilt-light.svg" alt="">
+          <span class="nav-text">Повідомлення</span>
+        </a>
+      </nav>
+    </div>
+
+    <a class="profile" href="/profile/" aria-label="Профіль">
+      {% if current_user and current_user.photo_url %}<img src="{{ current_user.photo_url }}" alt="{{ current_user.name }}">{% else %}<div class="sidebar-avatar"></div>{% endif %}
+      <span class="profile-name">Профіль</span>
+    </a>
+  </aside>
+
+  <main class="main">
+    <section class="top">
+      <div class="top-head">
+        <div class="top-left">
+          <a class="back" href="/messages/{{ partner.id }}/" aria-label="Назад до чату">&lsaquo;</a>
+          <h1 class="title">Профіль</h1>
+        </div>
+      </div>
+
+      <div class="identity">
+        {% if partner.photo_url %}
+          <img class="avatar" src="{{ partner.photo_url }}" alt="{{ partner.name }}">
+        {% else %}
+          <div class="avatar-placeholder"></div>
+        {% endif %}
+
+        <div>
+          <div class="name-row">
+            <div class="name-age">{{ partner.name }}{% if partner_age %} | {{ partner_age }}{% endif %}</div>
+            <div class="status" aria-hidden="true"><img src="/images/icons/grommet-icons_status-good.svg" alt=""></div>
+          </div>
+          <a class="chat-btn" href="/messages/{{ partner.id }}/">
+            <img class="chat-btn-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt="">
+            <span>Написати повідомлення</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="grid">
+        <div>
+          <h2 class="section-title">Про мене</h2>
+          <p class="about">{% if partner.bio %}{{ partner.bio }}{% else %}Користувач ще не додав опис.{% endif %}</p>
+
+          <h2 class="section-title">Інтереси</h2>
+          <div class="chips">
+            {% if partner_interests %}
+              {% for item in partner_interests %}<span class="chip">{{ item }}</span>{% endfor %}
+            {% else %}
+              <span class="chip">Не вказано</span>
+            {% endif %}
+          </div>
+
+          <h2 class="details-title">Більше про мене</h2>
+          <div class="details">
+            <div class="detail">
+              <div class="label">Місто</div>
+              <div class="value">{% if partner.city %}{{ partner.city }}{% else %}Не вказано{% endif %}</div>
+            </div>
+            <div class="detail">
+              <div class="label">Знак зодіаку</div>
+              <div class="value">{% if partner_zodiac_sign %}{{ partner_zodiac_sign }}{% else %}Не вказано{% endif %}</div>
+            </div>
+            <div class="detail">
+              <div class="label">Стать</div>
+              <div class="value">{% if partner.gender %}{{ partner.gender }}{% else %}Не вказано{% endif %}</div>
+            </div>
+            <div class="detail">
+              <div class="label">Шукає</div>
+              <div class="value">{% if partner.looking_for %}{{ partner.looking_for }}{% else %}Не вказано{% endif %}</div>
+            </div>
+            <div class="detail">
+              <div class="label">Стиль життя</div>
+              <div class="value">{% if partner.lifestyle %}{{ partner.lifestyle }}{% else %}Не вказано{% endif %}</div>
+            </div>
+            <div class="detail">
+              <div class="label">Цінності</div>
+              <div class="value">{% if partner.values %}{{ partner.values }}{% else %}Не вказано{% endif %}</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="photo-panel">
+          <div class="photo-head">
+            <h2 class="photo-title">Фото</h2>
+          </div>
+          {% if partner.photo_url %}
+            <img class="photo" src="{{ partner.photo_url }}" alt="{{ partner.name }}">
+          {% else %}
+            <div class="photo"></div>
+          {% endif %}
+        </aside>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
