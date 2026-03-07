@@ -103,7 +103,7 @@ body{background:var(--page-bg);color:var(--text)}
 <div class="layout">
   <aside class="sidebar">
     <div>
-      <div class="logo"><img src="/images/logo.png" alt="SoulLink" class="logo-img"></div>
+      <a class="logo" href="/"><img src="/images/logo.png" alt="SoulLink" class="logo-img"></a>
       <nav class="nav">
         <a href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
           <img src="/images/icons/codicon_home.svg" alt="">

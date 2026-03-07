@@ -499,7 +499,7 @@ def login(request):
         request.session['user_id'] = user.id
 
         
-        return redirect('home')
+        return redirect('dating')
 
     return render(request, 'auth.html')
 

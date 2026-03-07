@@ -476,9 +476,9 @@ body{
 <div class="layout">
   <aside class="sidebar">
     <div>
-      <div class="logo">
+      <a class="logo" href="/">
         <img src="/images/logo.png" alt="SoulLink" class="logo-img">
-      </div>
+      </a>
 
       <nav class="nav">
         <a class="active" href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
