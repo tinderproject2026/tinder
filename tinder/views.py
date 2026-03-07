@@ -387,14 +387,16 @@ def chat(request, partner_id=None):
         text = request.POST.get("text", "").strip()
         image = request.FILES.get("image")
         video = request.FILES.get("video")
+        voice = request.FILES.get("voice")
         
-        if text or image or video:
+        if text or image or video or voice:
             ChatMessage.objects.create(
                 sender=me, 
                 receiver=active_partner, 
                 text=text,
                 image=image,
-                video=video
+                video=video,
+                voice=voice
             )
         return redirect(f"/messages/{active_partner.id}/")
 
@@ -662,6 +664,12 @@ def delete_message(request, message_id):
                 import os
                 if os.path.exists(message.video.path):
                     os.remove(message.video.path)
+        
+        if message.voice:
+            if message.voice.path:
+                import os
+                if os.path.exists(message.voice.path):
+                    os.remove(message.voice.path)
         
         partner_id = message.receiver_id if message.sender_id == me.id else message.sender_id
         message.delete()

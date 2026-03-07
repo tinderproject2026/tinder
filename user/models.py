@@ -82,6 +82,7 @@ class ChatMessage(models.Model):
     text = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='chat/images/', blank=True, null=True)
     video = models.FileField(upload_to='chat/videos/', blank=True, null=True)
+    voice = models.FileField(upload_to='chat/voices/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

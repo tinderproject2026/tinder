@@ -320,6 +320,14 @@ body{background:var(--bg);color:var(--text)}
                 <video src="{{ m.video.url }}" preload="metadata" style="width:100%;border-radius:12px;cursor:pointer;" onclick="this.paused ? this.play() : this.pause()"></video>
               </div>
             {% endif %}
+            {% if m.voice %}
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.05);border-radius:20px;">
+                <button onclick="this.nextElementSibling.play()" style="background:none;border:none;cursor:pointer;padding:0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <audio src="{{ m.voice.url }}" style="height:24px;"></audio>
+              </div>
+            {% endif %}
             {% if m.text %}
               <div class="bubble-text">{{ m.text }}</div>
             {% endif %}
@@ -357,12 +365,16 @@ body{background:var(--bg);color:var(--text)}
         <input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
         <input type="file" id="imageInput" name="image" accept="image/*" style="display:none">
         <input type="file" id="videoInput" name="video" accept="video/*" style="display:none">
+        <input type="file" id="voiceInput" name="voice" accept="audio/*" style="display:none">
         <input class="input" id="chatInput" type="text" name="text" placeholder="Повідомлення..." autocomplete="off" {% if not active_partner %}disabled{% endif %}>
         <button class="emoji-btn" id="emojiToggle" type="button" aria-label="Додати емодзі" {% if not active_partner %}disabled{% endif %}>
           <img class="input-icon" src="/images/icons/iconoir_emoji.svg" alt="">
         </button>
+        <button type="button" id="voiceBtn" class="emoji-btn" aria-label="Записати голосове" {% if not active_partner %}disabled{% endif %}>
+          <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="Голосове">
+        </button>
         <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;">
-          <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="Відправити">
+          <img class="input-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt="Відправити">
         </button>
       </form>
     </div>
@@ -427,6 +439,52 @@ if (input && emojiToggle && emojiPicker) {
     }
   });
 }
+
+const voiceBtn = document.getElementById('voiceBtn');
+const voiceInput = document.getElementById('voiceInput');
+
+if (voiceBtn && voiceInput && chatForm) {
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+
+  voiceBtn.addEventListener('click', async () => {
+    if (!isRecording) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const dataTransfer = new DataTransfer();
+          const file = new File([audioBlob], 'voice.webm', { type: 'audio/webm' });
+          dataTransfer.items.add(file);
+          voiceInput.files = dataTransfer.files;
+          
+          stream.getTracks().forEach(track => track.stop());
+          chatForm.submit();
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        voiceBtn.style.opacity = '0.5';
+      } catch (err) {
+        console.error('Помилка доступу до мікрофона:', err);
+        alert('Не вдалося отримати доступ до мікрофона');
+      }
+    } else {
+      mediaRecorder.stop();
+      isRecording = false;
+      voiceBtn.style.opacity = '1';
+    }
+  });
+}
+
 
 if (fileInput && chatForm) {
   fileInput.addEventListener('change', function() {
