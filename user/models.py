@@ -46,7 +46,6 @@ class Profile(models.Model):
         )
         encoded = base64.b64encode(raw).decode("ascii")
         self.photo_data = f"data:{mime_type};base64,{encoded}"
-        # Keep DB as the source of truth for profile photos.
         self.photo = None
 
     @property
@@ -64,11 +63,10 @@ class Profile(models.Model):
         return self.username
     
 
-# ===== LIKE SYSTEM =====
 class Like(models.Model):
     from_user = models.ForeignKey(Profile, related_name="sent_likes", on_delete=models.CASCADE)
     to_user = models.ForeignKey(Profile, related_name="received_likes", on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)   # <--- КЛЮЧ
+    accepted = models.BooleanField(default=False)
 
 class Match(models.Model):
     user1 = models.ForeignKey(Profile, related_name="match_user1", on_delete=models.CASCADE)

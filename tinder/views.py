@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 def calculate_age(birth_date):
     if not birth_date:
@@ -151,6 +152,7 @@ def serialize_chat_message(message, me):
         "is_mine": message.sender_id == me.id,
         "image_url": message.image.url if message.image else "",
         "video_url": message.video.url if message.video else "",
+        "voice_url": message.voice.url if message.voice else "",
     }
 
 
@@ -210,14 +212,18 @@ def likes(request):
         received_likes__from_user=me
     )
 
-    like_cards = [
+    like_cards_all = [
         {"profile": p, "age": calculate_age(p.birth_date)}
         for p in profiles
     ]
+    paginator = Paginator(like_cards_all, 10)
+    page_obj = paginator.get_page(request.GET.get("page"))
 
     return render(request, "likes.html", {
         "profiles": profiles,
-        "like_cards": like_cards,
+        "like_cards": page_obj.object_list,
+        "page_obj": page_obj,
+        "total_likes": len(like_cards_all),
         "current_user": me,
         "latest_chat": get_latest_chat(me),
     })
@@ -229,14 +235,18 @@ def sympathy(request):
 
     profiles = get_match_partners(user)
 
-    sympathy_cards = [
+    sympathy_cards_all = [
         {"profile": p, "age": calculate_age(p.birth_date)}
         for p in profiles
     ]
+    paginator = Paginator(sympathy_cards_all, 10)
+    page_obj = paginator.get_page(request.GET.get("page"))
 
     return render(request, "sympathy.html", {
         "profiles": profiles,
-        "sympathy_cards": sympathy_cards,
+        "sympathy_cards": page_obj.object_list,
+        "page_obj": page_obj,
+        "total_sympathies": len(sympathy_cards_all),
         "current_user": user,
         "latest_chat": get_latest_chat(user),
     })
@@ -260,10 +270,8 @@ def accept_like(request, user_id):
     me = Profile.objects.get(id=request.session["user_id"])
     sender = Profile.objects.get(id=user_id)
 
-    # створюємо матч
     Match.objects.get_or_create(user1=me, user2=sender)
 
-    # ❗ ВИДАЛЯЄМО ВСІ ЛАЙКИ МІЖ НИМИ
     Like.objects.filter(from_user=sender, to_user=me).delete()
     Like.objects.filter(from_user=me, to_user=sender).delete()
 
@@ -318,7 +326,6 @@ def profile_matches_filters(profile, filters, me):
     if age < filters["age_min"] or age > filters["age_max"]:
         return False
 
-    # The project has no coordinates, so distance is approximated by city matching buckets.
     target_city = (profile.city or "").strip().lower()
     base_city = (filters.get("city") or me.city or "").strip().lower()
     max_distance = filters["max_distance"]
@@ -450,9 +457,10 @@ def chat(request, partner_id=None):
         image = request.FILES.get("image")
         video = request.FILES.get("video")
         voice = request.FILES.get("voice")
-        
+
+        created_message = None
         if text or image or video or voice:
-            ChatMessage.objects.create(
+            created_message = ChatMessage.objects.create(
                 sender=me, 
                 receiver=active_partner, 
                 text=text,
@@ -460,6 +468,16 @@ def chat(request, partner_id=None):
                 video=video,
                 voice=voice
             )
+
+        is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+        if is_ajax:
+            if not created_message:
+                return JsonResponse({"error": "empty_message"}, status=400)
+            return JsonResponse({
+                "ok": True,
+                "message": serialize_chat_message(created_message, me),
+            })
+
         return redirect(f"/messages/{active_partner.id}/")
 
     thread_messages = []
@@ -615,7 +633,6 @@ def register(request):
             username = request.POST.get('username', '').strip()
             password = request.POST.get('password', '')
 
-            # Перевірка чи існує користувач
             if Profile.objects.filter(username=username).exists():
                 messages.error(request, 'Користувач з таким логіном вже існує')
                 return redirect('register')
@@ -628,7 +645,6 @@ def register(request):
             if day and month and year:
                 birth_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
-            # Створюємо профіль
             profile = Profile.objects.create(
                 username=username,
                 name=name,
@@ -641,7 +657,6 @@ def register(request):
 
             request.session['reg_profile_id'] = profile.id
 
-        # КРОК 2 (фото)
         elif step == 2:
             if not profile:
                 messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
@@ -652,7 +667,6 @@ def register(request):
                 profile.set_photo_file(photo)
                 profile.save()
 
-        # КРОК 3 (про себе)
         elif step == 3:
             if not profile:
                 messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
@@ -663,7 +677,6 @@ def register(request):
             profile.lifestyle = request.POST.get('lifestyle')
             profile.save()
 
-        # КРОК 4 (що шукає)
         elif step == 4:
             if not profile:
                 messages.error(request, 'Сесія реєстрації втрачена. Заповніть форму ще раз.')
@@ -673,7 +686,6 @@ def register(request):
             profile.values = request.POST.get('values')
             profile.save()
 
-            # Очищаємо сесію
             request.session.pop('reg_data', None)
             request.session.pop('reg_profile_id', None)
             messages.success(request, 'Реєстрація успішна 💖')
@@ -709,7 +721,6 @@ def profile(request):
         user.interests = request.POST.get('interests')
         user.lifestyle = request.POST.get('lifestyle')
 
-        # ДАТА НАРОДЖЕННЯ
         day = request.POST.get('birth_day')
         month = request.POST.get('birth_month')
         year = request.POST.get('birth_year')

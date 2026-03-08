@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/images/favicon.png" type="image/png">
 <title>Налаштування партнера</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -441,8 +442,8 @@ body{background:var(--page-bg);color:var(--text)}
               <div class="other-list">
                 <label class="other-row">
                   <span class="other-copy">
-                    <span class="other-main">Верифіковані профілі</span><br>
-                    <span class="other-sub">Тільки профілі з пройденою верифікацією</span>
+                    <span class="other-main">Показувати онлайн</span><br>
+                    <span class="other-sub">Твоя активність і статус будуть видимі потенційним партнерам</span>
                   </span>
                   <input class="other-check" type="checkbox">
                 </label>
@@ -453,7 +454,7 @@ body{background:var(--page-bg);color:var(--text)}
           <div class="stack">
             <article class="card">
               <div class="field">
-                <label for="city">Локація</label>
+                <label for="city">Місто</label>
                 <input class="text-input" id="city" name="city" value="{{ filters.city }}" placeholder="Введіть місто">
               </div>
 
@@ -508,7 +509,7 @@ function setupTagDropdown(chipsId, inputId, addId, dropdownId){
     tags.forEach((tag, idx)=>{
       const el=document.createElement('span');
       el.className='chip';
-      el.innerHTML=`<span>${tag}</span><button type="button" aria-label="Видалити">×</button>`;
+      el.innerHTML=`<span>${tag}</span><button type="button" aria-label="Видалити">?</button>`;
       el.querySelector('button').addEventListener('click',()=>{
         tags.splice(idx,1);
         sync();
@@ -589,4 +590,5 @@ document.addEventListener('click',(event)=>{
 </script>
 </body>
 </html>
+
 

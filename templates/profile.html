@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Редагувати профіль</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/images/favicon.png" type="image/png">
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -17,7 +18,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== SIDEBAR (ТОЧНО ЯК HOME) ===== */
 .sidebar {
   width: 240px;
   background: #f2f4f7;
@@ -66,7 +66,6 @@ body {
   object-fit: cover;
 }
 
-/* ===== MAIN ===== */
 .main {
   flex: 1;
   padding: 30px;
@@ -84,14 +83,12 @@ body {
   margin-right: auto;
 }
 
-/* ===== PROFILE CARD ===== */
 .profile-card {
   background: transparent;
   border-radius: 0;
   padding: 30px 40px;
 }
 
-/* HEADER */
 .profile-header h2 {
   margin: 0;
   font-size: 22px;
@@ -121,14 +118,12 @@ body {
   color: #fff;
 }
 
-/* GRID */
 .profile-grid {
   display: grid;
   grid-template-columns: 260px 1fr 1fr;
   gap: 24px;
 }
 
-/* PHOTO */
 .photo-block {
   display: flex;
   flex-direction: column;
@@ -187,7 +182,6 @@ body {
   background: #d0d8e6;
 }
 
-/* FIELDS */
 label {
   font-size: 13px;
   font-weight: 600;
@@ -366,7 +360,6 @@ textarea {
 }
 
 
-/* БІЛИЙ ХЕДЕР */
 .profile-header {
   background: #ffffff;
   padding: 18px 28px;
@@ -375,7 +368,6 @@ textarea {
   box-shadow: 0 10px 25px rgba(0,0,0,.08);
 }
 
-/* вирівнювання кнопок */
 .actions {
   display: flex;
   justify-content: space-between;
@@ -415,7 +407,6 @@ textarea {
 }
 
 
-/* SIDEBAR */
 .sidebar {
   width: 300px;
   background: #f4f5f6;
@@ -516,7 +507,6 @@ textarea {
   letter-spacing: -0.18px;
 }
 
-/* Sidebar style equal to messages page */
 .mini-sidebar{
   width:112px;
   background:#f6f6f6;
@@ -577,7 +567,6 @@ textarea {
 
 .mini-avatar{background:#cfd5df}
 
-/* Top header like reference */
 .main{
   flex:1;
   padding:0;
@@ -698,7 +687,6 @@ textarea {
 
 <body>
 
-<!-- SIDEBAR -->
 <aside class="mini-sidebar">
   <div class="mini-top">
     <a href="/"><img src="/images/logo-2.png" alt="SoulLink" class="mini-logo"></a>
@@ -726,7 +714,6 @@ textarea {
   </a>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
 
 <form method="POST" enctype="multipart/form-data">
@@ -746,10 +733,8 @@ textarea {
 
 <div class="profile-card">
 
-  <!-- GRID -->
   <div class="profile-grid">
 
-<!-- PHOTO -->
 <div class="photo-block">
 
   {% if user.photo_url %}
@@ -773,7 +758,6 @@ textarea {
 
 </div>
 
-<!-- COL 1 -->
 <div>
 
   <label>Імʼя</label>
@@ -828,10 +812,8 @@ textarea {
 </div>
 
 
-<!-- ===== COL 2 (ВИПРАВЛЕНО ВІДСТУПИ) ===== -->
 <div>
 
-  <!-- BIO -->
   <div style="margin-bottom:30px;">
     <label>Про мене</label>
     <textarea name="bio">{{ user.bio }}</textarea>
@@ -843,7 +825,6 @@ textarea {
   </div>
 
 
-  <!-- INTERESTS -->
   <div style="margin-bottom:30px;">
     <label class="section-title">
       Інтереси
@@ -871,7 +852,6 @@ textarea {
   </div>
 
 
-  <!-- LIFESTYLE -->
   <div style="margin-bottom:30px;">
     <label class="section-title">
       Стиль життя
@@ -911,7 +891,6 @@ if (input) {
 
     const url = URL.createObjectURL(file);
 
-    // якщо вже є <img>
     if (preview.tagName === 'IMG') {
       preview.src = url;
     } else {
@@ -978,7 +957,6 @@ document.querySelectorAll(".dropdown-item").forEach(item => {
 update();
 
 
-// -------- LIFESTYLE --------
 const lifestyleBox = document.getElementById("lifestyleChips");
 const lifestyleBtn = document.getElementById("addLifestyle");
 const lifestyleDropdown = document.getElementById("lifestyleDropdown");

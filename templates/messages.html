@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/images/favicon.png" type="image/png">
 <title>Повідомлення</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,7 +279,7 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
         <a class="mini-link" href="/dating/" aria-label="Знайомства"><img class="mini-link-icon" src="/images/icons/codicon_home.svg" alt=""></a>
         <a class="mini-link" href="/sympathy/" aria-label="Симпатії"><img class="mini-link-icon" src="/images/icons/system-uicons_chain.svg" alt=""></a>
         <a class="mini-link" href="/likes/" aria-label="Лайки"><img class="mini-link-icon" src="/images/icons/solar_heart-linear.svg" alt=""></a>
-        <a class="mini-link active" href="/messages/" aria-label="Повідомлення"><img class="mini-link-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt=""></a>
+        <a class="mini-link active" href="/messages/" aria-label="Повідомлення"><img class="mini-link-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt="Відправити"></a>
       </nav>
     </div>
     <a class="mini-user" href="/profile/" aria-label="Профіль">
@@ -294,7 +295,7 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
           {% if convo.partner.photo_url %}<img class="item-avatar" src="{{ convo.partner.photo_url }}" alt="{{ convo.partner.name }}">{% else %}<div class="mini-avatar item-avatar"></div>{% endif %}
           <div class="item-main">
             <div class="item-name">{{ convo.partner.name }}</div>
-            <div class="item-sub">{% if convo.last_message %}{{ convo.last_message.text }}{% else %}Сьогодні{% endif %}</div>
+            <div class="item-sub">{% if convo.last_message %}{{ convo.last_message.text }}{% else %}Немає повідомлень{% endif %}</div>
           </div>
           <div class="item-side">
             {% if convo.is_mine and convo.last_message %}
@@ -314,7 +315,7 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
           {% if active_partner.photo_url %}<img class="chat-head-avatar" src="{{ active_partner.photo_url }}" alt="{{ active_partner.name }}">{% else %}<div class="mini-avatar chat-head-avatar"></div>{% endif %}
           <div class="chat-head-name">{{ active_partner.name }}</div>
         </div>
-        <a class="info-link" href="/messages/profile/{{ active_partner.id }}/" aria-label="Профіль співрозмовника">
+        <a class="info-link" href="/messages/profile/{{ active_partner.id }}/" aria-label="Відкрити профіль користувача">
           <img class="info-icon" src="/images/icons/mdi-light_information.svg" alt="">
         </a>
       </header>
@@ -345,7 +346,7 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
             <div class="bubble-meta">
               <span>{{ m.created|date:"H:i" }}</span>
               {% if m.sender_id == current_user.id %}
-                <a href="/delete-message/{{ m.id }}/" class="delete-btn" title="Видалити" onclick="return confirm('Видалити повідомлення?')">✕</a>
+                <a href="/delete-message/{{ m.id }}/" class="delete-btn" title="Видалити" onclick="return confirm('Видалити повідомлення?')">×</a>
                 <img class="bubble-ticks-icon" src="/images/icons/mdi_ticks.svg" alt="">
               {% endif %}
             </div>
@@ -359,30 +360,27 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
     <div class="input-wrap">
       <div class="emoji-picker" id="emojiPicker" aria-hidden="true">
         <div class="emoji-grid">
-          <button class="emoji-item" type="button">😀</button><button class="emoji-item" type="button">😁</button><button class="emoji-item" type="button">😂</button><button class="emoji-item" type="button">😅</button><button class="emoji-item" type="button">😊</button><button class="emoji-item" type="button">😉</button><button class="emoji-item" type="button">😍</button><button class="emoji-item" type="button">😘</button><button class="emoji-item" type="button">😎</button><button class="emoji-item" type="button">🙂</button>
-          <button class="emoji-item" type="button">🤗</button><button class="emoji-item" type="button">🤔</button><button class="emoji-item" type="button">😇</button><button class="emoji-item" type="button">😌</button><button class="emoji-item" type="button">🙃</button><button class="emoji-item" type="button">😋</button><button class="emoji-item" type="button">😄</button><button class="emoji-item" type="button">😃</button><button class="emoji-item" type="button">😆</button><button class="emoji-item" type="button">😜</button>
-          <button class="emoji-item" type="button">👍</button><button class="emoji-item" type="button">👎</button><button class="emoji-item" type="button">👏</button><button class="emoji-item" type="button">🙌</button><button class="emoji-item" type="button">🔥</button><button class="emoji-item" type="button">💯</button><button class="emoji-item" type="button">✨</button><button class="emoji-item" type="button">⭐</button><button class="emoji-item" type="button">🎉</button><button class="emoji-item" type="button">🎊</button>
-          <button class="emoji-item" type="button">❤</button><button class="emoji-item" type="button">🧡</button><button class="emoji-item" type="button">💛</button><button class="emoji-item" type="button">💚</button><button class="emoji-item" type="button">💙</button><button class="emoji-item" type="button">💜</button><button class="emoji-item" type="button">🖤</button><button class="emoji-item" type="button">💔</button><button class="emoji-item" type="button">💕</button><button class="emoji-item" type="button">💖</button>
-          <button class="emoji-item" type="button">🙏</button><button class="emoji-item" type="button">🤝</button><button class="emoji-item" type="button">💪</button><button class="emoji-item" type="button">👌</button><button class="emoji-item" type="button">👀</button><button class="emoji-item" type="button">🙈</button><button class="emoji-item" type="button">🤷</button><button class="emoji-item" type="button">💬</button><button class="emoji-item" type="button">📩</button><button class="emoji-item" type="button">✉</button>
-          <button class="emoji-item" type="button">☀</button><button class="emoji-item" type="button">🌈</button><button class="emoji-item" type="button">🌸</button><button class="emoji-item" type="button">🍀</button><button class="emoji-item" type="button">☕</button><button class="emoji-item" type="button">🍕</button><button class="emoji-item" type="button">🎵</button><button class="emoji-item" type="button">🎬</button><button class="emoji-item" type="button">🏝</button><button class="emoji-item" type="button">🌟</button>
+          <button class="emoji-item" type="button">&#128512;</button><button class="emoji-item" type="button">&#128513;</button><button class="emoji-item" type="button">&#128514;</button><button class="emoji-item" type="button">&#128521;</button><button class="emoji-item" type="button">&#128525;</button><button class="emoji-item" type="button">&#128536;</button><button class="emoji-item" type="button">&#128526;</button><button class="emoji-item" type="button">&#129303;</button><button class="emoji-item" type="button">&#129300;</button><button class="emoji-item" type="button">&#128588;</button>
+          <button class="emoji-item" type="button">&#128077;</button><button class="emoji-item" type="button">&#128293;</button><button class="emoji-item" type="button">&#10024;</button><button class="emoji-item" type="button">&#127881;</button><button class="emoji-item" type="button">&#10084;&#65039;</button><button class="emoji-item" type="button">&#128153;</button><button class="emoji-item" type="button">&#128154;</button><button class="emoji-item" type="button">&#128155;</button><button class="emoji-item" type="button">&#128156;</button><button class="emoji-item" type="button">&#128591;</button>
+          <button class="emoji-item" type="button">&#129309;</button><button class="emoji-item" type="button">&#128079;</button><button class="emoji-item" type="button">&#128064;</button><button class="emoji-item" type="button">&#127752;</button><button class="emoji-item" type="button">&#127775;</button><button class="emoji-item" type="button">&#128171;</button><button class="emoji-item" type="button">&#128151;</button><button class="emoji-item" type="button">&#128158;</button><button class="emoji-item" type="button">&#128161;</button><button class="emoji-item" type="button">&#127873;</button>
         </div>
       </div>
 
       <form class="input-form" method="POST" enctype="multipart/form-data" action="/messages/{% if active_partner %}{{ active_partner.id }}/{% endif %}">
         {% csrf_token %}
         <label for="fileInput" style="cursor:pointer;display:flex;align-items:center;">
-          <img class="input-icon" src="/images/icons/mynaui_paperclip.svg" alt="Прикріпити">
+          <img class="input-icon" src="/images/icons/mynaui_paperclip.svg" alt="Файл">
         </label>
         <input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
         <input type="file" id="imageInput" name="image" accept="image/*" style="display:none">
         <input type="file" id="videoInput" name="video" accept="video/*" style="display:none">
         <input type="file" id="voiceInput" name="voice" accept="audio/*" style="display:none">
-        <input class="input" id="chatInput" type="text" name="text" placeholder="Повідомлення..." autocomplete="off" {% if not active_partner %}disabled{% endif %}>
-        <button class="emoji-btn" id="emojiToggle" type="button" aria-label="Додати емодзі" {% if not active_partner %}disabled{% endif %}>
+        <input class="input" id="chatInput" type="text" name="text" placeholder="Написати повідомлення..." autocomplete="off" {% if not active_partner %}disabled{% endif %}>
+        <button class="emoji-btn" id="emojiToggle" type="button" aria-label="Відкрити смайли" {% if not active_partner %}disabled{% endif %}>
           <img class="input-icon" src="/images/icons/iconoir_emoji.svg" alt="">
         </button>
-        <button type="button" id="voiceBtn" class="emoji-btn" aria-label="Записати голосове" {% if not active_partner %}disabled{% endif %}>
-          <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="Голосове">
+        <button type="button" id="voiceBtn" class="emoji-btn" aria-label="Записати голосове повідомлення" {% if not active_partner %}disabled{% endif %}>
+          <img class="input-icon" src="/images/icons/iconamoon_microphone-thin.svg" alt="Голос">
         </button>
         <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;">
           <img class="input-icon" src="/images/icons/ph_paper-plane-tilt-light.svg" alt="Відправити">
@@ -400,6 +398,148 @@ const fileInput = document.getElementById('fileInput');
 const imageInput = document.getElementById('imageInput');
 const videoInput = document.getElementById('videoInput');
 const chatForm = document.querySelector('.input-form');
+const voiceBtn = document.getElementById('voiceBtn');
+const voiceInput = document.getElementById('voiceInput');
+const chatBody = document.querySelector('.chat-body');
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function scrollToBottom() {
+  if (chatBody) {
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+}
+
+function appendMessageBubble(msg) {
+  if (!chatBody || !msg) return;
+
+  const bubble = document.createElement('div');
+  bubble.className = `bubble ${msg.is_mine ? 'mine' : ''}`.trim();
+
+  if (msg.image_url) {
+    const img = document.createElement('img');
+    img.src = msg.image_url;
+    img.style.maxWidth = '250px';
+    img.style.borderRadius = '12px';
+    img.style.marginBottom = '8px';
+    bubble.appendChild(img);
+  }
+
+  if (msg.video_url) {
+    const wrap = document.createElement('div');
+    wrap.className = 'video-container';
+    wrap.style.position = 'relative';
+    wrap.style.maxWidth = '250px';
+    wrap.style.marginBottom = '8px';
+    const video = document.createElement('video');
+    video.src = msg.video_url;
+    video.preload = 'metadata';
+    video.style.width = '100%';
+    video.style.borderRadius = '12px';
+    video.style.cursor = 'pointer';
+    video.onclick = function () { this.paused ? this.play() : this.pause(); };
+    wrap.appendChild(video);
+    bubble.appendChild(wrap);
+  }
+
+  if (msg.voice_url) {
+    const voiceWrap = document.createElement('div');
+    voiceWrap.style.display = 'flex';
+    voiceWrap.style.alignItems = 'center';
+    voiceWrap.style.gap = '8px';
+    voiceWrap.style.padding = '8px 12px';
+    voiceWrap.style.background = 'rgba(0,0,0,0.05)';
+    voiceWrap.style.borderRadius = '20px';
+
+    const playBtn = document.createElement('button');
+    playBtn.type = 'button';
+    playBtn.style.background = 'none';
+    playBtn.style.border = 'none';
+    playBtn.style.cursor = 'pointer';
+    playBtn.style.padding = '0';
+    playBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M8 5v14l11-7z"/></svg>';
+
+    const audio = document.createElement('audio');
+    audio.src = msg.voice_url;
+    audio.style.height = '24px';
+    playBtn.addEventListener('click', () => audio.play());
+
+    voiceWrap.appendChild(playBtn);
+    voiceWrap.appendChild(audio);
+    bubble.appendChild(voiceWrap);
+  }
+
+  if (msg.text) {
+    const text = document.createElement('div');
+    text.className = 'bubble-text';
+    text.textContent = msg.text;
+    bubble.appendChild(text);
+  }
+
+  const meta = document.createElement('div');
+  meta.className = 'bubble-meta';
+  const time = document.createElement('span');
+  time.textContent = msg.time || '';
+  meta.appendChild(time);
+
+  if (msg.is_mine) {
+    const ticks = document.createElement('img');
+    ticks.className = 'bubble-ticks-icon';
+    ticks.src = '/images/icons/mdi_ticks.svg';
+    ticks.alt = '';
+    meta.appendChild(ticks);
+  }
+
+  bubble.appendChild(meta);
+  chatBody.appendChild(bubble);
+  scrollToBottom();
+}
+
+async function sendChatMessage() {
+  if (!chatForm) return;
+  const textValue = input ? input.value.trim() : '';
+  const hasImage = imageInput && imageInput.files && imageInput.files.length > 0;
+  const hasVideo = videoInput && videoInput.files && videoInput.files.length > 0;
+  const hasVoice = voiceInput && voiceInput.files && voiceInput.files.length > 0;
+  if (!textValue && !hasImage && !hasVideo && !hasVoice) return;
+
+  const formData = new FormData(chatForm);
+  try {
+    const response = await fetch(chatForm.action, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: formData,
+      credentials: 'same-origin',
+    });
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data.ok || !data.message) return;
+    appendMessageBubble(data.message);
+    if (input) input.value = '';
+    if (fileInput) fileInput.value = '';
+    if (imageInput) imageInput.value = '';
+    if (videoInput) videoInput.value = '';
+    if (voiceInput) voiceInput.value = '';
+  } catch (err) {
+    console.error('Не вдалося відправити повідомлення:', err);
+  }
+}
 
 if (fileInput && chatForm) {
   fileInput.addEventListener('change', function() {
@@ -418,8 +558,8 @@ if (fileInput && chatForm) {
         imageInput.files = dataTransfer.files;
         videoInput.value = '';
       }
-      
-      chatForm.submit();
+
+      sendChatMessage();
     }
   });
 }
@@ -451,9 +591,6 @@ if (input && emojiToggle && emojiPicker) {
   });
 }
 
-const voiceBtn = document.getElementById('voiceBtn');
-const voiceInput = document.getElementById('voiceInput');
-
 if (voiceBtn && voiceInput && chatForm) {
   let mediaRecorder = null;
   let audioChunks = [];
@@ -478,14 +615,14 @@ if (voiceBtn && voiceInput && chatForm) {
           voiceInput.files = dataTransfer.files;
           
           stream.getTracks().forEach(track => track.stop());
-          chatForm.submit();
+          sendChatMessage();
         };
 
         mediaRecorder.start();
         isRecording = true;
         voiceBtn.style.opacity = '0.5';
       } catch (err) {
-        console.error('Помилка доступу до мікрофона:', err);
+        console.error('Не вдалося отримати доступ до мікрофона:', err);
         alert('Не вдалося отримати доступ до мікрофона');
       }
     } else {
@@ -495,26 +632,16 @@ if (voiceBtn && voiceInput && chatForm) {
     }
   });
 }
-
-
-if (fileInput && chatForm) {
-  fileInput.addEventListener('change', function() {
-    if (this.files && this.files.length > 0) {
-      console.log('Файл обраний:', this.files[0].name);
-      chatForm.submit();
-    }
+if (chatForm) {
+  chatForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    sendChatMessage();
   });
 }
 
-const chatBody = document.querySelector('.chat-body');
 if (chatBody) {
-  const scrollToBottom = () => {
-    chatBody.scrollTop = chatBody.scrollHeight;
-  };
-
   scrollToBottom();
   window.addEventListener('load', scrollToBottom);
-
   chatBody.querySelectorAll('img, video').forEach((el) => {
     el.addEventListener('load', scrollToBottom);
     el.addEventListener('loadedmetadata', scrollToBottom);
@@ -523,5 +650,6 @@ if (chatBody) {
 </script>
 </body>
 </html>
+
 
 
