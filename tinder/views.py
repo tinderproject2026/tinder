@@ -285,6 +285,68 @@ def get_current_user(request):
     return Profile.objects.filter(id=user_id).first()
 
 
+def parse_csv_values(raw_value):
+    if not raw_value:
+        return []
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+def parse_int(value, default):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def get_dating_filters(request):
+    raw = request.session.get("dating_filters", {})
+    return {
+        "age_min": parse_int(raw.get("age_min", 18), 18),
+        "age_max": parse_int(raw.get("age_max", 100), 100),
+        "city": (raw.get("city", "") or "").strip(),
+        "max_distance": parse_int(raw.get("max_distance", 200), 200),
+        "interests": raw.get("interests", []) or [],
+        "lifestyle": raw.get("lifestyle", []) or [],
+    }
+
+
+def profile_matches_filters(profile, filters, me):
+    age = calculate_age(profile.birth_date)
+    if age is None:
+        return False
+
+    if age < filters["age_min"] or age > filters["age_max"]:
+        return False
+
+    # The project has no coordinates, so distance is approximated by city matching buckets.
+    target_city = (profile.city or "").strip().lower()
+    base_city = (filters.get("city") or me.city or "").strip().lower()
+    max_distance = filters["max_distance"]
+    if base_city and max_distance <= 50:
+        if base_city and target_city != base_city:
+            return False
+    elif base_city and max_distance <= 120:
+        first_letter = base_city[:1]
+        if first_letter and not target_city.startswith(first_letter):
+            return False
+    elif base_city and max_distance <= 180:
+        first_two = base_city[:2]
+        if first_two and not target_city.startswith(first_two):
+            return False
+
+    if filters["interests"]:
+        profile_interests = (profile.interests or "").lower()
+        if not any(tag.lower() in profile_interests for tag in filters["interests"]):
+            return False
+
+    if filters["lifestyle"]:
+        profile_lifestyle = (profile.lifestyle or "").lower()
+        if not any(tag.lower() in profile_lifestyle for tag in filters["lifestyle"]):
+            return False
+
+    return True
+
+
 def latest_chat_data(request):
     if not request.session.get("user_id"):
         return JsonResponse({"error": "unauthorized"}, status=401)
@@ -446,11 +508,43 @@ def login_required(view_func):
     return wrapper
 
 @login_required
-def dating(request):
-    if not request.session.get("user_id"):
-        return redirect("auth")
-
+def dating_settings(request):
     me = Profile.objects.get(id=request.session["user_id"])
+    current_filters = get_dating_filters(request)
+    if not current_filters["city"]:
+        current_filters["city"] = (me.city or "").strip()
+
+    if request.method == "POST":
+        action = request.POST.get("action", "apply")
+        if action == "reset":
+            request.session.pop("dating_filters", None)
+            return redirect("dating")
+
+        age_min = parse_int(request.POST.get("age_min", 18), 18)
+        age_max = parse_int(request.POST.get("age_max", 100), 100)
+        if age_min > age_max:
+            age_min, age_max = age_max, age_min
+
+        request.session["dating_filters"] = {
+            "age_min": max(18, min(age_min, 100)),
+            "age_max": max(18, min(age_max, 100)),
+            "city": request.POST.get("city", "").strip(),
+            "max_distance": max(1, min(parse_int(request.POST.get("max_distance", 200), 200), 200)),
+            "interests": parse_csv_values(request.POST.get("interests", "")),
+            "lifestyle": parse_csv_values(request.POST.get("lifestyle", "")),
+        }
+        return redirect("dating")
+
+    return render(request, "dating_settings.html", {
+        "current_user": me,
+        "filters": current_filters,
+    })
+
+
+@login_required
+def dating(request):
+    me = Profile.objects.get(id=request.session["user_id"])
+    filters = get_dating_filters(request)
 
     viewed = Like.objects.filter(from_user=me).values_list("to_user", flat=True)
 
@@ -460,13 +554,15 @@ def dating(request):
     if opposite_gender_filter is not None:
         profiles = profiles.filter(opposite_gender_filter)
 
-    profile = random.choice(list(profiles)) if profiles else None
+    filtered_profiles = [p for p in profiles if profile_matches_filters(p, filters, me)]
+    profile = random.choice(filtered_profiles) if filtered_profiles else None
 
     return render(request, "dating.html", {
         "profile": profile,
         "profile_age": calculate_age(profile.birth_date) if profile else None,
         "current_user": me,
         "latest_chat": get_latest_chat(me),
+        "active_filters": filters,
     })
 
 

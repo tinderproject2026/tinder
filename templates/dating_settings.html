@@ -1,0 +1,592 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Налаштування партнера</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page-bg:#c2d7ee;
+  --sidebar-bg:#f4f5f6;
+  --text:#0f1114;
+  --accent:#0A1B58;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
+body{background:var(--page-bg);color:var(--text)}
+
+.layout{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:336px 1fr;
+}
+
+.sidebar{
+  background:var(--sidebar-bg);
+  border-right:1px solid #dde2ea;
+  padding:42px 44px 34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.logo{
+  display:flex;
+  justify-content:center;
+  margin-bottom:40px;
+}
+
+.logo-img{
+  width:130px;
+  height:auto;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.nav a{
+  color:inherit;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:background-color .16s ease;
+}
+
+.nav a img{
+  width:32px;
+  height:32px;
+  object-fit:contain;
+  opacity:.72;
+}
+
+.nav-text{
+  color:#4a515c;
+  font-size:19px;
+  line-height:24px;
+  font-weight:500;
+  letter-spacing:-0.18px;
+}
+.nav a.active .nav-text{color:#0f1114;font-weight:600}
+.nav a.active img{opacity:1}
+.nav a:hover{background:#d9e6f4}
+.nav a:active{background:#c8dbef}
+.nav a.active{background:#cfe2f6}
+
+.profile{display:flex;align-items:center;gap:12px;text-decoration:none;color:#2d3138}
+.profile img,.sidebar-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover}
+.sidebar-avatar{background:#d4d9e1}
+.profile-name{font-size:19px;line-height:24px;font-weight:500;letter-spacing:-0.18px}
+
+.main{padding:26px 24px}
+.settings-wrap{max-width:1100px;margin:0 auto}
+.settings-top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:40px}
+
+.title-row{display:flex;align-items:center;gap:14px}
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+  line-height:1;
+  transform:translateY(-1px);
+  text-decoration:none;
+  color:#0f1114;
+}
+.settings-title{font-size:38px;line-height:1.08;font-weight:600;letter-spacing:-0.2px}
+
+.reset-btn{
+  border:1px solid transparent;
+  background:#0A1B58;
+  color:#eef3ff;
+  border-radius:10px;
+  padding:10px 16px;
+  font-size:14px;
+  line-height:1.1;
+  font-weight:600;
+  cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.reset-btn:hover{
+  background:#e7eefb;
+  color:#1b327f;
+  border-color:#5b74c9;
+}
+.reset-btn:active{
+  background:#0f2469;
+  color:#eef3ff;
+  border-color:transparent;
+}
+
+.grid{display:grid;grid-template-columns:1.05fr 1fr;gap:22px;align-items:start}
+.stack{display:grid;gap:22px}
+
+.card{background:#f1f1f2;border-radius:8px;padding:18px 16px}
+
+.card-title{font-size:20px;line-height:1.15;font-weight:500;margin-bottom:12px}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.value{font-size:18px;line-height:1.15;font-weight:500}
+
+.dual-range{position:relative;height:34px;margin-top:8px}
+.range-line{position:absolute;left:3px;right:3px;top:26px;height:1px;background:#8f949c;border-radius:2px;pointer-events:none}
+.dual-range input[type='range']{
+  position:absolute;
+  left:0;
+  right:0;
+  top:22px;
+  width:100%;
+  background:transparent;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.dual-range input[type='range']::-webkit-slider-runnable-track{height:2px;background:transparent}
+.dual-range input[type='range']::-moz-range-track{height:2px;background:transparent}
+.dual-range input[type='range']::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#4d4d4d;margin-top:-4px;cursor:pointer}
+.dual-range input[type='range']::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#4d4d4d;border:none;cursor:pointer}
+
+
+.range-input{width:100%;accent-color:#4d4d4d}
+
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:17px;line-height:1.15;font-weight:500;margin-bottom:8px}
+
+.select-like-wrap{
+  position:relative;
+}
+
+.select-like-arrow{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#111319;
+  font-size:21px;
+  pointer-events:none;
+}
+
+.text-input{
+  width:100%;
+  border:1px solid #d7d9dd;
+  border-radius:8px;
+  background:#eff1f4;
+  color:#111319;
+  padding:9px 12px;
+  font-size:14px;
+  line-height:1.2;
+}
+.text-input::placeholder{color:#8b919b}
+
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid #d4d7dc;border-radius:8px;background:#eff1f4;font-size:14px;line-height:1.15}
+.chip button{border:none;background:transparent;color:#111319;font-size:22px;line-height:1;cursor:pointer}
+.add-chip{width:31px;justify-content:center;padding:4px 0}
+.add-plus{
+  margin-left:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border:1px solid #d4d7dc;
+  border-radius:8px;
+  background:#eff1f4;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  user-select:none;
+}
+.dropdown{
+  margin-top:10px;
+  border:1px solid #d4d7dc;
+  border-radius:8px;
+  background:#fff;
+  max-height:180px;
+  overflow:auto;
+}
+.dropdown-item{
+  padding:8px 10px;
+  font-size:14px;
+  cursor:pointer;
+}
+.dropdown-item:hover{background:#eaf2fd}
+.hidden{display:none}
+
+.other-title{
+  font-size:18px;
+  font-weight:500;
+  margin:4px 0 8px;
+}
+
+.other-list{display:grid;gap:10px}
+
+.other-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  width:500px;
+  max-width:100%;
+}
+
+.other-copy{
+  width:430px;
+  max-width:100%;
+}
+
+.other-main{
+  font-size:16px;
+  font-weight:500;
+}
+
+.other-sub{
+  margin-top:4px;
+  color:#4f5b6b;
+  font-size:13px;
+  border-bottom:1px solid #8d97a6;
+  display:inline-block;
+}
+
+.other-check{
+  width:26px;
+  height:26px;
+  border:2px solid #3f4650;
+  border-radius:4px;
+  margin-top:2px;
+  margin-left:14px;
+  appearance:none;
+  background:#fff0;
+  cursor:pointer;
+  position:relative;
+}
+
+.other-check:checked::after{
+  content:"";
+  position:absolute;
+  left:6px;
+  top:1px;
+  width:8px;
+  height:14px;
+  border:solid #1b2f58;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+
+.search-btn{
+  width:100%;
+  margin-top:8px;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:#0A1B58;
+  color:#eef3ff;
+  padding:10px 14px;
+  font-size:22px;
+  line-height:1.1;
+  font-weight:600;
+  cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.search-btn:hover{
+  background:#e7eefb;
+  color:#1b327f;
+  border-color:#5b74c9;
+}
+.search-btn:active{
+  background:#0f2469;
+  color:#eef3ff;
+  border-color:transparent;
+}
+
+@media (max-width:1320px){
+  .layout{grid-template-columns:96px 1fr}
+  .sidebar{padding:22px 16px}
+  .logo{margin-bottom:18px}
+  .logo-img{width:54px}
+  .nav{gap:22px;align-items:center}
+  .nav-text,.profile-name{display:none}
+  .profile{justify-content:center}
+  .main{padding:24px 16px}
+  .settings-title{font-size:34px}
+  .back-link{font-size:34px}
+  .reset-btn{font-size:22px;padding:11px 16px}
+  .card-title,.value,.field label{font-size:20px}
+  .text-input,.chip{font-size:16px}
+  .search-btn{font-size:24px}
+}
+
+@media (max-width:920px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:block;border-bottom:1px solid rgba(0,0,0,.06);padding:14px}
+  .logo{margin-bottom:12px}
+  .logo-img{width:86px}
+  .nav{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:12px}
+  .nav a{background:#fff;border-radius:12px;padding:8px 10px}
+  .nav a img{width:20px;height:20px}
+  .nav-text{display:inline;font-size:14px;line-height:20px;font-weight:600}
+  .profile{justify-content:center}
+  .profile-name{display:inline;font-size:14px;line-height:20px}
+
+  .main{padding:14px 10px 18px}
+  .settings-title{font-size:24px}
+  .back-link{font-size:30px}
+  .reset-btn{font-size:16px;padding:10px 14px}
+  .grid{grid-template-columns:1fr;gap:12px}
+  .stack{gap:12px}
+  .card{padding:14px 12px}
+  .card-title,.value,.field label{font-size:21px}
+  .text-input,.chip{font-size:16px;padding:10px 12px}
+  .chip{gap:8px}
+  .add-chip{width:36px;padding:6px 0}
+  .search-btn{margin-top:12px;padding:13px 14px;font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <a class="logo" href="/">
+        <img src="/images/logo.png" alt="SoulLink" class="logo-img">
+      </a>
+
+      <nav class="nav">
+        <a class="active" href="{% if request.session.user_id %}/dating/{% else %}/login/{% endif %}">
+          <img src="/images/icons/codicon_home.svg" alt="">
+          <span class="nav-text">Знайомства</span>
+        </a>
+        <a href="{% if request.session.user_id %}/sympathy{% else %}/login/{% endif %}">
+          <img src="/images/icons/system-uicons_chain.svg" alt="">
+          <span class="nav-text">Симпатії</span>
+        </a>
+        <a href="{% if request.session.user_id %}/likes/{% else %}/login/{% endif %}">
+          <img src="/images/icons/solar_heart-linear.svg" alt="">
+          <span class="nav-text">Лайки</span>
+        </a>
+        <a href="/messages/">
+          <img src="/images/icons/ph_paper-plane-tilt-light.svg" alt="">
+          <span class="nav-text">Повідомлення</span>
+        </a>
+      </nav>
+    </div>
+
+    <a href="/profile/" class="profile">
+      {% if current_user and current_user.photo_url %}
+        <img src="{{ current_user.photo_url }}" alt="{{ current_user.name }}">
+      {% else %}
+        <div class="sidebar-avatar"></div>
+      {% endif %}
+      <span class="profile-name">Профіль</span>
+    </a>
+  </aside>
+
+  <main class="main">
+    <div class="settings-wrap">
+      <form method="post" id="filters-form">
+        {% csrf_token %}
+
+        <div class="settings-top">
+          <div class="title-row">
+            <a class="back-link" href="/dating/">&lsaquo;</a>
+            <h1 class="settings-title">Налаштування партнера</h1>
+          </div>
+          <button class="reset-btn" type="submit" name="action" value="reset">Скинути</button>
+        </div>
+
+        <div class="grid">
+          <div class="stack">
+            <article class="card">
+              <div class="row-between">
+                <h2 class="card-title">Віковий діапазон</h2>
+                <div class="value" id="age-value">{{ filters.age_min }} - {{ filters.age_max }}+</div>
+              </div>
+              <div class="dual-range">
+                <div class="range-line"></div>
+                <input type="range" id="age-min" min="18" max="100" value="{{ filters.age_min }}">
+                <input type="range" id="age-max" min="18" max="100" value="{{ filters.age_max }}">
+              </div>
+              <input type="hidden" name="age_min" id="age-min-hidden" value="{{ filters.age_min }}">
+              <input type="hidden" name="age_max" id="age-max-hidden" value="{{ filters.age_max }}">
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Інтереси <span id="add-interest" class="add-plus">+</span></h2>
+              <div class="chips" id="interests-chips"></div>
+              <div id="interests-dropdown" class="dropdown hidden">
+                <div class="dropdown-item">Мистецтво</div>
+                <div class="dropdown-item">Кіно</div>
+                <div class="dropdown-item">Їжа</div>
+                <div class="dropdown-item">Музика</div>
+                <div class="dropdown-item">Книги</div>
+                <div class="dropdown-item">Спорт</div>
+                <div class="dropdown-item">Ігри</div>
+                <div class="dropdown-item">Подорожі</div>
+                <div class="dropdown-item">Фотографія</div>
+                <div class="dropdown-item">Велоспорт</div>
+                <div class="dropdown-item">Театр</div>
+                <div class="dropdown-item">Вечірки</div>
+              </div>
+              <input type="hidden" name="interests" id="interests-input" value="{{ filters.interests|join:', ' }}">
+            </article>
+
+            <article>
+              <h3 class="other-title">Інші налаштування</h3>
+              <div class="other-list">
+                <label class="other-row">
+                  <span class="other-copy">
+                    <span class="other-main">Верифіковані профілі</span><br>
+                    <span class="other-sub">Тільки профілі з пройденою верифікацією</span>
+                  </span>
+                  <input class="other-check" type="checkbox">
+                </label>
+              </div>
+            </article>
+          </div>
+
+          <div class="stack">
+            <article class="card">
+              <div class="field">
+                <label for="city">Локація</label>
+                <input class="text-input" id="city" name="city" value="{{ filters.city }}" placeholder="Введіть місто">
+              </div>
+
+              <div class="row-between" style="margin-top:8px;">
+                <h2 class="card-title" style="margin:0;">Максимальна відстань</h2>
+                <div class="value" id="distance-value">{{ filters.max_distance }}+ км</div>
+              </div>
+              <input class="range-input" type="range" id="max-distance" min="1" max="200" name="max_distance" value="{{ filters.max_distance }}">
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Стиль життя <span id="add-lifestyle" class="add-plus">+</span></h2>
+              <div class="chips" id="lifestyle-chips"></div>
+              <div id="lifestyle-dropdown" class="dropdown hidden">
+                <div class="dropdown-item">Активний</div>
+                <div class="dropdown-item">Домашній</div>
+                <div class="dropdown-item">Творчий</div>
+                <div class="dropdown-item">Соціальний</div>
+                <div class="dropdown-item">Спортсмен</div>
+                <div class="dropdown-item">Тусовщик</div>
+                <div class="dropdown-item">Розмірений</div>
+                <div class="dropdown-item">Мандрівник</div>
+              </div>
+              <input type="hidden" name="lifestyle" id="lifestyle-input" value="{{ filters.lifestyle|join:', ' }}">
+            </article>
+
+            <button class="search-btn" type="submit" name="action" value="apply">Пошук</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+function parseTags(raw){
+  if(!raw) return [];
+  return raw.split(',').map(v=>v.trim()).filter(Boolean);
+}
+
+function setupTagDropdown(chipsId, inputId, addId, dropdownId){
+  const chips=document.getElementById(chipsId);
+  const input=document.getElementById(inputId);
+  const addBtn=document.getElementById(addId);
+  const dropdown=document.getElementById(dropdownId);
+  let tags=parseTags(input.value);
+
+  function sync(){
+    input.value=tags.join(', ');
+    chips.innerHTML='';
+
+    tags.forEach((tag, idx)=>{
+      const el=document.createElement('span');
+      el.className='chip';
+      el.innerHTML=`<span>${tag}</span><button type="button" aria-label="Видалити">×</button>`;
+      el.querySelector('button').addEventListener('click',()=>{
+        tags.splice(idx,1);
+        sync();
+      });
+      chips.appendChild(el);
+    });
+  }
+
+  if(addBtn&&dropdown){
+    addBtn.addEventListener('click',()=>{
+      dropdown.classList.toggle('hidden');
+    });
+
+    dropdown.querySelectorAll('.dropdown-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        const value=item.textContent.trim();
+        if(!value) return;
+        if(!tags.find(t=>t.toLowerCase()===value.toLowerCase())){
+          tags.push(value);
+          sync();
+        }
+        dropdown.classList.add('hidden');
+      });
+    });
+  }
+
+  sync();
+}
+
+const ageMin=document.getElementById('age-min');
+const ageMax=document.getElementById('age-max');
+const ageMinHidden=document.getElementById('age-min-hidden');
+const ageMaxHidden=document.getElementById('age-max-hidden');
+const ageValue=document.getElementById('age-value');
+
+function syncAge(){
+  let minVal=parseInt(ageMin.value,10);
+  let maxVal=parseInt(ageMax.value,10);
+  if(minVal>maxVal){
+    const tmp=minVal;
+    minVal=maxVal;
+    maxVal=tmp;
+    ageMin.value=minVal;
+    ageMax.value=maxVal;
+  }
+  ageMinHidden.value=minVal;
+  ageMaxHidden.value=maxVal;
+  ageValue.textContent=`${minVal} - ${maxVal}+`;
+}
+
+ageMin.addEventListener('input',syncAge);
+ageMax.addEventListener('input',syncAge);
+
+syncAge();
+
+const maxDistance=document.getElementById('max-distance');
+const distanceValue=document.getElementById('distance-value');
+maxDistance.addEventListener('input',()=>{
+  distanceValue.textContent=`${maxDistance.value}+ км`;
+});
+
+setupTagDropdown('interests-chips','interests-input','add-interest','interests-dropdown');
+setupTagDropdown('lifestyle-chips','lifestyle-input','add-lifestyle','lifestyle-dropdown');
+
+document.addEventListener('click',(event)=>{
+  const dropdowns=[
+    {add:'add-interest',menu:'interests-dropdown'},
+    {add:'add-lifestyle',menu:'lifestyle-dropdown'}
+  ];
+  dropdowns.forEach(({add,menu})=>{
+    const addBtn=document.getElementById(add);
+    const dropdown=document.getElementById(menu);
+    if(!addBtn||!dropdown) return;
+    if(dropdown.contains(event.target)||addBtn.contains(event.target)) return;
+    dropdown.classList.add('hidden');
+  });
+});
+</script>
+</body>
+</html>
+

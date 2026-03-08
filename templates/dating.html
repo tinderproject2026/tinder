@@ -138,15 +138,28 @@ body{
 }
 
 .partner-btn{
-  border:none;
-  background:var(--accent);
-  color:#fff;
+  border:1px solid transparent;
+  background:#0A1B58;
+  color:#eef3ff;
   border-radius:14px;
   padding:13px 22px;
   font-size:15px;
   line-height:22px;
   font-weight:500;
   cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+
+.partner-btn:hover{
+  background:#e7eefb;
+  color:#1b327f;
+  border-color:#5b74c9;
+}
+
+.partner-btn:active{
+  background:#0A1B58;
+  color:#eef3ff;
+  border-color:transparent;
 }
 
 .center-wrap{
@@ -512,7 +525,7 @@ body{
 
   <main class="main">
     <div class="top-actions">
-      <button class="partner-btn" type="button">Налаштування партнера &nbsp; &#8250;</button>
+      <button class="partner-btn" type="button" onclick="location.href='/dating/settings/'">Налаштування партнера</button>
     </div>
 
     <div class="center-wrap">

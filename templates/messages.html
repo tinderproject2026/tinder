@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -505,6 +505,23 @@ if (fileInput && chatForm) {
     }
   });
 }
+
+const chatBody = document.querySelector('.chat-body');
+if (chatBody) {
+  const scrollToBottom = () => {
+    chatBody.scrollTop = chatBody.scrollHeight;
+  };
+
+  scrollToBottom();
+  window.addEventListener('load', scrollToBottom);
+
+  chatBody.querySelectorAll('img, video').forEach((el) => {
+    el.addEventListener('load', scrollToBottom);
+    el.addEventListener('loadedmetadata', scrollToBottom);
+  });
+}
 </script>
 </body>
 </html>
+
+

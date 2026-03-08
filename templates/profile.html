@@ -636,14 +636,33 @@ textarea {
   line-height:20px;
   font-weight:600;
   cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
 }
 
 .edit-cancel{
   background:#C8C8C8;
   color:#111319;
 }
+.edit-cancel:hover{
+  background:#e7eefb;
+  color:#1b327f;
+}
+.edit-cancel:active{
+  background:#b8bec9;
+  color:#111319;
+}
 
 .edit-save{
+  background:#0A1B58;
+  color:#fff;
+  border:1px solid transparent;
+}
+.edit-save:hover{
+  background:#e7eefb;
+  color:#1b327f;
+  border-color:#5b74c9;
+}
+.edit-save:active{
   background:#0A1B58;
   color:#fff;
 }
@@ -658,6 +677,15 @@ textarea {
   background:#ffe3e3;
   color:#8f1111;
   text-decoration:none;
+  transition:background-color .15s ease,color .15s ease;
+}
+.edit-logout:hover{
+  background:#ffcccc;
+  color:#8f1111;
+}
+.edit-logout:active{
+  background:#f3bbbb;
+  color:#8f1111;
 }
 
 .profile-card{

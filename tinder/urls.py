@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('logout/', views.logout, name='logout'),
     path("dating/", views.dating, name="dating"),
+    path("dating/settings/", views.dating_settings, name="dating_settings"),
 
     path("like/<int:user_id>/", views.like_user),
     path("dislike/<int:user_id>/", views.dislike_user),
