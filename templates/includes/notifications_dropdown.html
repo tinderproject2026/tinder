@@ -1,0 +1,279 @@
+<style>
+.notifications-widget{
+  position:fixed;
+  top:22px;
+  right:24px;
+  z-index:1400;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+.notifications-toggle{
+  width:54px;
+  height:54px;
+  border:none;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:linear-gradient(180deg,#f7fbff 0%,#d7e7f7 100%);
+  box-shadow:0 14px 34px rgba(7,28,89,.14);
+  transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease;
+}
+.notifications-toggle:hover{
+  transform:translateY(-1px);
+  box-shadow:0 18px 38px rgba(7,28,89,.18);
+}
+.notifications-toggle:active{
+  transform:translateY(0);
+}
+.notifications-toggle svg{
+  width:24px;
+  height:24px;
+  stroke:#0f2167;
+}
+.notifications-badge{
+  position:absolute;
+  top:-4px;
+  right:-4px;
+  min-width:22px;
+  height:22px;
+  padding:0 6px;
+  border-radius:999px;
+  background:#0f2167;
+  color:#fff;
+  font-size:12px;
+  line-height:22px;
+  font-weight:700;
+  text-align:center;
+  box-shadow:0 10px 18px rgba(15,33,103,.28);
+}
+.notifications-panel{
+  width:min(360px,calc(100vw - 28px));
+  max-height:min(72vh,620px);
+  overflow:auto;
+  border-radius:28px;
+  background:linear-gradient(180deg,#f4f8fd 0%,#dce8f4 100%);
+  border:1px solid rgba(143,168,203,.58);
+  box-shadow:0 24px 60px rgba(6,26,98,.2);
+  padding:16px;
+  display:none;
+}
+.notifications-panel.is-open{
+  display:block;
+}
+.notifications-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.notifications-title{
+  color:#0f2167;
+  font-size:18px;
+  line-height:22px;
+  font-weight:700;
+}
+.notifications-clear{
+  border:none;
+  background:rgba(255,255,255,.78);
+  color:#0f2167;
+  border-radius:12px;
+  padding:8px 12px;
+  font-size:13px;
+  line-height:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+.notifications-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.notification-card{
+  background:rgba(255,255,255,.8);
+  border:1px solid rgba(188,208,229,.8);
+  border-radius:22px;
+  padding:14px 14px 13px;
+  box-shadow:0 8px 22px rgba(15,33,103,.08);
+}
+.notification-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.notification-icon{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#eef6ff 0%,#cdddf0 100%);
+}
+.notification-icon svg{
+  width:20px;
+  height:20px;
+  stroke:#0f2167;
+}
+.notification-type{
+  color:#0f2167;
+  font-size:15px;
+  line-height:19px;
+  font-weight:700;
+}
+.notification-text{
+  margin:10px 0 0;
+  padding-left:52px;
+  color:#324769;
+  font-size:14px;
+  line-height:20px;
+}
+.notifications-empty{
+  background:rgba(255,255,255,.74);
+  border:1px dashed rgba(142,166,199,.8);
+  border-radius:20px;
+  padding:18px 16px;
+  color:#4c5b75;
+  font-size:14px;
+  line-height:20px;
+  text-align:center;
+}
+@media (max-width: 920px){
+  .notifications-widget{
+    top:14px;
+    right:14px;
+  }
+  .notifications-toggle{
+    width:48px;
+    height:48px;
+    border-radius:16px;
+  }
+  .notifications-panel{
+    width:min(340px,calc(100vw - 20px));
+  }
+}
+</style>
+
+<div class="notifications-widget" data-notifications-widget>
+  <div style="position:relative;">
+    <button class="notifications-toggle" type="button" aria-label="Відкрити сповіщення" aria-expanded="false" data-notifications-toggle>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.8 9.4a5.2 5.2 0 1 1 10.4 0c0 5.6 2.3 5.7 2.3 7.1H4.5c0-1.4 2.3-1.5 2.3-7.1Z"></path>
+        <path d="M10.1 19.2a2.2 2.2 0 0 0 3.8 0"></path>
+      </svg>
+    </button>
+    <span class="notifications-badge" data-notifications-badge>0</span>
+  </div>
+
+  <div class="notifications-panel" data-notifications-panel>
+    <div class="notifications-head">
+      <div class="notifications-title">Сповіщення</div>
+      <button class="notifications-clear" type="button" data-notifications-clear>Очистити</button>
+    </div>
+
+    <div class="notifications-list" data-notifications-list></div>
+  </div>
+</div>
+
+{{ profile_notifications|default:'[]'|json_script:"profile-notifications-data" }}
+<script>
+(function () {
+  const widget = document.querySelector('[data-notifications-widget]');
+  if (!widget) return;
+
+  const toggle = widget.querySelector('[data-notifications-toggle]');
+  const panel = widget.querySelector('[data-notifications-panel]');
+  const list = widget.querySelector('[data-notifications-list]');
+  const badge = widget.querySelector('[data-notifications-badge]');
+  const clearBtn = widget.querySelector('[data-notifications-clear]');
+  const dataNode = document.getElementById('profile-notifications-data');
+
+  const defaults = [
+    {
+      type: 'Новий лайк',
+      kind: 'like',
+      text: 'Хтось тебе лайкнув. Заглянь у профілі, щоб подивитися, хто це міг бути.'
+    },
+    {
+      type: 'Нове повідомлення',
+      kind: 'message',
+      text: 'Хтось надіслав повідомлення. Можеш відкрити чат і відповісти.'
+    }
+  ];
+
+  let incoming = [];
+  if (dataNode) {
+    try {
+      incoming = JSON.parse(dataNode.textContent || '[]');
+    } catch (error) {
+      incoming = [];
+    }
+  }
+  if (!Array.isArray(incoming)) {
+    incoming = [];
+  }
+
+  let notifications = defaults.concat(incoming);
+
+  function icon(kind) {
+    if (kind === 'like') {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.3 4.9 13.7a4.6 4.6 0 0 1 6.5-6.5L12 7.8l.6-.6a4.6 4.6 0 1 1 6.5 6.5L12 20.3Z"></path></svg>';
+    }
+    if (kind === 'success') {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.6 4.1 4.1L19 7.8"></path></svg>';
+    }
+    if (kind === 'message') {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.6A2.6 2.6 0 0 1 7.6 5h8.8A2.6 2.6 0 0 1 19 7.6v5.8A2.6 2.6 0 0 1 16.4 16H10l-4.3 3.1V7.6Z"></path></svg>';
+    }
+    return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v8"></path><path d="M12 16h.01"></path><path d="M5.1 19h13.8L12 4 5.1 19Z"></path></svg>';
+  }
+
+  function render() {
+    badge.textContent = String(notifications.length);
+    badge.style.display = notifications.length ? 'inline-block' : 'none';
+
+    if (!notifications.length) {
+      list.innerHTML = '<div class="notifications-empty">Поки що тут порожньо.</div>';
+      return;
+    }
+
+    list.innerHTML = notifications.map(function (item) {
+      return '' +
+        '<article class="notification-card">' +
+          '<div class="notification-top">' +
+            '<div class="notification-icon">' + icon(item.kind) + '</div>' +
+            '<div class="notification-type">' + item.type + '</div>' +
+          '</div>' +
+          '<p class="notification-text">' + item.text + '</p>' +
+        '</article>';
+    }).join('');
+  }
+
+  function setOpen(isOpen) {
+    panel.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(!panel.classList.contains('is-open'));
+  });
+
+  clearBtn.addEventListener('click', function () {
+    notifications = [];
+    render();
+  });
+
+  document.addEventListener('click', function (event) {
+    if (!widget.contains(event.target)) {
+      setOpen(false);
+    }
+  });
+
+  render();
+})();
+</script>

@@ -41,8 +41,6 @@ body{background:var(--page-bg);color:var(--text)}
 .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
 .header h1{font-size:36px;line-height:42px;margin-bottom:8px;font-weight:700;letter-spacing:-0.2px}
 .count{font-size:24px;line-height:32px;font-weight:500;color:#2d3540}
-.filter-btn{margin-top:6px;border:none;background:transparent;cursor:pointer}
-.filter-icon{width:42px;height:42px;object-fit:contain}
 
 .grid{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:18px}
 .card-link{text-decoration:none;color:inherit;display:block}
@@ -107,6 +105,7 @@ body{background:var(--page-bg);color:var(--text)}
 </style>
 </head>
 <body>
+{% include "includes/notifications_dropdown.html" %}
 <div class="layout">
   <aside class="sidebar">
     <div>
@@ -139,9 +138,6 @@ body{background:var(--page-bg);color:var(--text)}
         <h1>Симпатії</h1>
         <div class="count">{{ total_sympathies }} симпатії</div>
       </div>
-      <button class="filter-btn" type="button" aria-label="Фільтри">
-        <img class="filter-icon" src="/images/icons/mage_filter.svg" alt="">
-      </button>
     </div>
 
     {% if sympathy_cards %}

@@ -31,6 +31,10 @@ body{
   color:var(--text);
 }
 
+.page-dating .notifications-widget{
+  top:38px;
+}
+
 .layout{
   min-height:100vh;
   display:grid;
@@ -135,6 +139,8 @@ body{
 .top-actions{
   display:flex;
   justify-content:flex-end;
+  padding-right:94px;
+  margin-top:-10px;
   margin-bottom:20px;
 }
 
@@ -394,6 +400,9 @@ body{
 }
 
 @media (max-width:920px){
+  .page-dating .notifications-widget{
+    top:14px;
+  }
   .layout{grid-template-columns:1fr;}
   .sidebar{
     display:block;
@@ -433,6 +442,8 @@ body{
     padding:14px 10px 86px;
   }
   .top-actions{
+    padding-right:64px;
+    margin-top:-6px;
     margin-bottom:12px;
   }
   .partner-btn{
@@ -486,7 +497,8 @@ body{
 }
 </style>
 </head>
-<body>
+<body class="page-dating">
+{% include "includes/notifications_dropdown.html" %}
 <div class="layout">
   <aside class="sidebar">
     <div>
